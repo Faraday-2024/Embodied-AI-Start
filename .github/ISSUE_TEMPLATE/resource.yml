@@ -1,0 +1,46 @@
+name: 推荐资源
+description: 推荐论文、代码、数据、基准或教程
+title: "[Resource] "
+labels:
+  - resource
+body:
+  - type: dropdown
+    id: category
+    attributes:
+      label: 资源类别
+      options:
+        - Paper
+        - Code
+        - Dataset
+        - Benchmark
+        - Tutorial
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: 名称
+      placeholder: 例如 Fast-WAM
+    validations:
+      required: true
+  - type: input
+    id: official_url
+    attributes:
+      label: 官方链接
+      placeholder: https://...
+    validations:
+      required: true
+  - type: textarea
+    id: value
+    attributes:
+      label: 对初学者的价值
+      description: 用 1–3 句话说明应该学什么，以及建议放在哪个章节。
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 配套资源与验证状态
+      description: 是否有代码、数据、checkpoint、文档或个人复现记录？
+

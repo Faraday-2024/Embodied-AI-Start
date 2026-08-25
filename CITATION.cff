@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: If this learning map helps your work, please cite the repository URL and access date.
+title: Embodied AI Starter Map
+type: software
+version: 0.1.0
+date-released: 2026-08-25
+license: MIT
+abstract: A Chinese beginner-oriented learning map for VLA, world models, world action models, imitation learning, and reinforcement learning.
+keywords:
+  - embodied-ai
+  - vision-language-action
+  - world-model
+  - world-action-model
+  - reinforcement-learning
