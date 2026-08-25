@@ -1,12 +1,17 @@
-# 知识图谱：WAM、WM 与 RL
+# 知识图谱：WM、MBRL、WAM 与 RL
 
-这一页不是术语百科，而是一张用于做研究选择的地图。阅读时始终追问：**模型预测什么、动作从哪里来、数据如何获得、部署时是否规划？**
+**模型预测什么、动作从哪里来、数据如何获得、部署时是否规划？**
+
+## 0. 机器人学基础
+
+机器人学把模型输出接到真实执行器：坐标系与 $SE(3)$ 定义几何关系，运动学与 Jacobian 负责可达性和速度映射，动力学与控制器负责稳定执行，标定与安全层负责 sim-to-real 和急停。详见 [机器人学基础](robotics.md)。
 
 ## 1. 具身学习全景
 
 ```mermaid
 flowchart TD
     ROOT["具身智能"] --> OBS["观测：图像 / 状态 / 触觉 / 语言"]
+    ROOT --> ROB["机器人学：坐标 / 运动学 / 动力学 / 控制 / 安全"]
     ROOT --> ACT["动作：关节 / 末端位姿 / 技能 / token"]
     ROOT --> OBJ["目标：任务指令 / 奖励 / 偏好"]
 
@@ -18,36 +23,79 @@ flowchart TD
     WM --> WAM["世界动作模型 WAM"]
     VLA --> WAM
 
-    ACT --> BC["行为克隆 BC"]
+    ACT --> SUP["动作监督 / 示范数据"]
     ACT --> RL["强化学习 RL"]
     OBJ --> RL
+    RL --> MBRL["Model-based RL：模型辅助决策"]
 
-    BC --> VLA
+    SUP --> VLA
     RL --> VLA
     RL --> WAM
+    ROB --> VLA
+    ROB --> WM
+    ROB --> WAM
+    ROB --> RL
 ```
 
 ### 核心对象
 
-| 对象 | 典型学习目标 | 决策接口 | 常见优势 | 常见风险 |
-| --- | --- | --- | --- | --- |
-| VLM | 图文对齐、生成与理解 | 通常不直接输出机器人动作 | 语义知识和泛化强 | 缺少动作与物理接地 |
-| VLA | $\pi(a_t \mid o_{\le t}, l)$ | 直接输出动作或动作块 | 端到端、部署路径短 | 容易成为反应式映射；时序/物理建模可能不足 |
-| WM | $p(s_{t+1}, r_t \mid s_t, a_t)$ 或其潜空间版本 | 供想象、规划、价值学习或数据生成使用 | 样本效率、反事实预测 | 模型误差累积、OOD 幻觉 |
-| WAM | 联合或耦合地预测未来世界与动作 | 未来生成后解码动作，或直接由世界表征出动作 | 将物理预测和策略学习统一 | 训练/推理昂贵，评测标准仍在发展 |
+| 对象 | 典型学习目标                                     | 决策接口                                             | 常见优势                       | 常见风险                                  |
+| ---- | ------------------------------------------------ | ---------------------------------------------------- | ------------------------------ | ----------------------------------------- |
+| VLM  | 图文对齐、生成与理解                             | 通常不直接输出机器人动作                             | 语义知识和泛化强               | 缺少动作与物理接地                        |
+| VLA  | $\pi(a_t \mid o_{\le t}, l)$                   | 直接输出动作或动作块                                 | 端到端、部署路径短             | 容易成为反应式映射；时序/物理建模可能不足 |
+| WM   | 学习潜在状态、未来视频、3D/4D 场景或动作条件演化 | 表征、预测、生成、检索或作为其他模块的输入           | 物理表征、反事实预测、数据生成 | 预测与真实控制脱节、生成幻觉、长时程漂移  |
+| MBRL | 学习动力学/奖励模型并用于规划、价值或策略优化    | imagined rollout、MPC、model-predictive actor-critic | 样本效率、可做反事实决策       | 模型偏差、OOD rollout、规划成本           |
+| WAM  | 联合或耦合地预测未来世界与动作                   | 未来生成后解码动作，或直接由世界表征出动作           | 将物理预测和策略学习统一       | 训练/推理昂贵                             |
 
-> 这里的公式是常见抽象，不是对所有架构的硬性定义。尤其 WAM 仍是快速演化中的研究范式。
+### Backbone 与生成头
 
-## 2. WM → WAM：差异与连接
+在比较 VLA、WM 或 WAM 时，先把“如何处理上下文”和“如何生成连续目标”拆开：
+
+```mermaid
+flowchart LR
+    C["图像 / 语言 / 状态 / 历史"] --> B["Transformer backbone<br/>[B,L,D]"]
+    B --> TOK["next-token / action-token"]
+    B --> REG["连续回归"]
+    B --> DIF["diffusion denoiser"]
+    B --> FM["flow velocity field"]
+    B --> FUT["JEPA / video / 3D future head"]
+    TOK --> A["动作或动作块"]
+    REG --> A
+    DIF --> A
+    FM --> A
+    FUT --> W["WM/WAM 未来表征"]
+```
+
+| 层                             | 主要问题                           | 典型张量/目标                                       | 不应直接推出的结论                                 |
+| ------------------------------ | ---------------------------------- | --------------------------------------------------- | -------------------------------------------------- |
+| Transformer backbone           | 如何融合 token、模态和历史？       | `$[B,L,D]$`、attention、causal/bidirectional mask | 使用 Transformer 不等于使用 next-token 或生成式 WM |
+| Next-token / action-token head | 如何把动作离散化并按序列预测？     | logits `$[B,L,V]$`、交叉熵                        | token 化不保证连续动作精度或低延迟                 |
+| Diffusion head                 | 如何从噪声逐步恢复动作/未来？      | `$[B,H,A]$`、epsilon/x0/v loss、scheduler         | 去噪 loss 不等于闭环控制成功率                     |
+| Flow-matching head             | 如何学习从源分布到数据分布的速度？ | `$v_\theta(x,t,C)$`、ODE integration              | flow 标签不说明 solver、步数或控制频率             |
+| JEPA/video/3D head             | 如何预测未来表征、视频或几何？     | latent/video/3D future objective                    | 需结合动作条件和决策证据                           |
+
+详细公式、训练/推理伪代码见[模型基础](model-basics.md)。判断一个模型是否属于 MBRL，仍要追问它是否把 dynamics/reward 用于 rollout、MPC、value 或 policy optimization。
+
+## 2. WM → WAM：差异与相似性
+
+这里的 **World Model 是广义表征/预测/生成范式**，当前常见路线包括：
+
+- **JEPA / latent predictive learning**：预测未来表征而不是重建每个像素，强调可预测、可迁移的 latent dynamics；
+- **视频世界模型**：生成或预测动作条件的未来视频/视频潜变量，关注时空一致性、交互性和长时程记忆；
+- **3D/4D 世界模型**：维护几何、对象、视角和时间演化，可用 3D Gaussian、点云、隐式场或多视图 token 表示；
+- **动作条件 WM**：把 action 作为输入并检验未来是否对动作敏感，但仍不一定包含规划器或策略优化。
+
+**MBRL 是另一条决策路线**：只要模型服务于 rollout、MPC、价值估计或 actor-critic 更新，就属于 MBRL；它可以使用 latent state dynamics，而不需要生成视频或 3D 场景。
 
 ```mermaid
 flowchart TD
     CTX["上下文：历史观测 + 指令"] --> WM["World Model"]
     CTX --> VLA["VLA Policy"]
 
-    WM --> FUT["预测未来状态 / 图像 / 潜变量"]
-    FUT --> PLAN["规划、价值估计或数据增强"]
-    PLAN --> A1["动作"]
+    WM --> FUT["预测未来表征 / 视频 / 3D-4D 场景"]
+    FUT --> PLAN["表征学习、数据生成或动作条件验证"]
+    PLAN --> MBRL["可选：MBRL / MPC / value learning"]
+    MBRL --> A1["动作"]
 
     VLA --> A2["直接动作 / 动作块"]
 
@@ -75,14 +123,14 @@ flowchart TD
     I2 --> FAST["Fast-WAM 的核心问题设定"]
 ```
 
-用四个问题读一篇 WAM 论文：
+阅读一篇 WAM 论文：
 
 1. **未来表示是什么？** RGB 视频、离散 token、连续潜变量，还是结构化状态？
 2. **动作如何进入模型？** 作为条件、与未来交替生成、由逆动力学恢复，还是由独立 action head 预测？
 3. **未来预测在哪里使用？** 仅训练期辅助，还是测试期也显式 rollout / search？
-4. **闭环价值是否成立？** 视频质量好不等于控制成功；需要看任务成功率、延迟、动作一致性和 OOD 泛化。
+4. **闭环价值是否成立？** 记录任务成功率、延迟、动作一致性和 OOD 泛化。
 
-## 3. RL：两条正交轴
+## 3. RL 与 MBRL：两条正交轴
 
 “offline、online、model-based”不能放在同一层级。正确的分类至少有两条轴。
 
@@ -96,7 +144,7 @@ flowchart TD
     DATA --> HY["Offline-to-Online：先离线再在线"]
 
     MODEL --> MF["Model-free：不显式规划世界模型"]
-    MODEL --> MB["Model-based：学习/使用模型做想象或规划"]
+    MODEL --> MB["MBRL：学习/使用模型做想象、规划或价值优化"]
 
     OFF --> OOD["关键难点：分布外动作的价值高估"]
     ON --> SAMPLE["关键难点：样本成本与安全"]
@@ -105,16 +153,17 @@ flowchart TD
 
 ### 二维矩阵
 
-| | Model-free | Model-based |
-| --- | --- | --- |
-| **Offline** | BC、CQL、IQL、Decision Transformer | MOPO、MOReL、COMBO、离线 TD-MPC2 |
-| **Online** | PPO、SAC、DQN 系列 | Dreamer 系列、MBPO、MuZero、在线 TD-MPC2 |
+|                             | Model-free RL                                 | MBRL                                       |
+| --------------------------- | --------------------------------------------- | ------------------------------------------ |
+| **Offline**           | CQL、IQL、Decision Transformer                | MOPO、MOReL、COMBO、离线 TD-MPC2           |
+| **Online**            | PPO、SAC、DQN 系列                            | Dreamer 系列、MBPO、MuZero、在线 TD-MPC2   |
 | **Offline-to-Online** | IQL/CQL 初始化后继续交互，或 VLA 的 RL 后训练 | 离线预训练世界模型，再用在线数据校准并规划 |
 
 补充两点：
 
 - **Decision Transformer** 使用固定轨迹并做条件序列建模，通常归入 offline RL 讨论，但它不一定使用经典 TD 学习。
-- **Model-based 不等于显式像素视频生成。** 潜空间动力学、奖励与价值预测也可以构成用于决策的 world model。
+- **MBRL 不等于视频/3D 世界模型。** MBRL 关心模型是否改善决策；latent dynamics、奖励和价值预测已经足够，不要求 RGB 视频或 3D 生成。
+- **WM 接入 MBRL 的条件。** JEPA 预训练、视频预测或 3D 场景生成接入动作条件、规划或控制验证后，可作为 MBRL 组件。
 
 ## 4. RL 的学习闭环
 
@@ -130,22 +179,22 @@ flowchart LR
     UPDATE --> PI
 ```
 
-离线 RL 把“环境 / 真实机器人”换成固定数据集 $D=\{(s,a,r,s')\}$，因此不能随意尝试新动作验证价值估计；这就是分布偏移问题的根源。Model-based RL 则在真实环境之外学习一个近似环境，用于 imagined rollout、MPC 或价值目标。
+离线 RL 把“环境 / 真实机器人”换成固定数据集 $D=\{(s,a,r,s')\}$，因此不能随意尝试新动作验证价值估计；这就是分布偏移问题的根源。MBRL 则在真实环境之外学习一个近似动力学/奖励模型，用于 imagined rollout、MPC 或价值目标。一个 JEPA、视频或 3D WM 只有在提供动作条件和决策收益证据后，才应被写成 MBRL 组件。
 
 ## 5. VLA / WAM 的常见训练流水线
 
 ```mermaid
 flowchart TD
     WEB["互联网图文 / 视频"] --> PRE["多模态预训练"]
-    ROBOT["多机器人示范轨迹"] --> CO["协同训练 / 行为克隆"]
+    VIDEO["视频 / 多视角 / 3D 数据"] --> WMPRE["WM：JEPA / video / 3D 表征与生成"]
+    ROBOT["多机器人示范轨迹"] --> CO["协同训练 / 动作监督"]
     PRE --> CO
     CO --> BASE["VLA 或 WAM 基座"]
     BASE --> SFT["任务/本体微调"]
-    SFT --> SIMRL["仿真在线 RL 后训练"]
+    WMPRE --> BASE
+    SFT --> SIMRL["仿真在线 RL / MBRL 后训练"]
     SIMRL --> REAL["真实机器人评测 / 小步校准"]
 ```
-
-将 π0.5、StarVLA、RLinf 放进这张图：
 
 - **π0.5**：重点观察异构数据协同训练如何带来开放世界与长时程泛化。
 - **StarVLA**：重点观察 VLM backbone 与 action head 的模块化实现。
@@ -154,13 +203,12 @@ flowchart TD
 
 ## 6. 做方法比较时的统一坐标
 
-| 维度 | 建议记录 |
-| --- | --- |
-| 输入 | 单/多视角 RGB、深度、状态、触觉、语言、历史窗口 |
-| 动作 | 关节、末端位姿、离散 token、连续动作、action chunk |
-| 数据 | 互联网、视频、人类示范、机器人示范、仿真、在线交互 |
-| 目标 | BC、flow matching、diffusion、next-token、TD、policy gradient、future prediction |
-| 世界表示 | 无、显式像素、离散 token、连续潜空间、结构化 3D |
-| 决策 | 一步反应、动作块、MPC、搜索、层级规划 |
-| 评测 | 成功率、泛化、样本效率、推理延迟、安全、恢复能力 |
-
+| 维度     | 建议记录                                                                                                           |
+| -------- | ------------------------------------------------------------------------------------------------------------------ |
+| 输入     | 单/多视角 RGB、深度、状态、触觉、语言、历史窗口                                                                    |
+| 动作     | 关节、末端位姿、离散 token、连续动作、action chunk                                                                 |
+| 数据     | 互联网、视频、人类示范、机器人示范、仿真、在线交互                                                                 |
+| 目标     | VLA：flow/diffusion/next-token；WM：JEPA/video/3D future prediction；MBRL：TD、model rollout、MPC、policy gradient |
+| 世界表示 | 无、JEPA latent、视频 latent/RGB、点云/3D Gaussian、结构化状态                                                     |
+| 决策     | 一步反应、动作块、MPC、搜索、层级规划                                                                              |
+| 评测     | 成功率、泛化、样本效率、推理延迟、安全、恢复能力                                                                   |

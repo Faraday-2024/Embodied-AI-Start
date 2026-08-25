@@ -5,6 +5,17 @@
 | Embodied AI | Embodied Artificial Intelligence | 在环境中通过感知与动作闭环完成任务的智能系统。 |
 | MDP | Markov Decision Process | 用状态、动作、转移、奖励和折扣描述序贯决策。 |
 | POMDP | Partially Observable MDP | 智能体只能看到不完整观测，需要用历史或记忆推断状态。 |
+| Configuration $q$ | Joint Configuration | 机器人所有关节位置/角度组成的配置向量。 |
+| DOF | Degrees of Freedom | 可以独立改变的运动自由度数量。 |
+| Coordinate Frame | Coordinate Reference Frame | 表示位置、姿态和速度的参考坐标系；必须明确 frame tree。 |
+| SE(3) | Special Euclidean Group in 3D | 同时表示三维旋转和平移的刚体位姿空间。 |
+| FK | Forward Kinematics | 根据关节配置计算末端位姿，$x=f(q)$。 |
+| IK | Inverse Kinematics | 根据目标末端位姿求关节配置，需处理多解、限位和碰撞。 |
+| Jacobian | Geometric / Analytical Jacobian | 将关节速度映射为末端速度，$\dot{x}=J(q)\dot{q}$。 |
+| Task Space | Task / Cartesian Space | 以末端位置、姿态或力描述动作的空间，与 joint space 相对。 |
+| Proprioception | Proprioceptive Sensing | 关节位置、速度、力矩等机器人自身状态观测。 |
+| Impedance Control | Impedance Control | 通过虚拟刚度和阻尼调节位置误差到力/运动的关系。 |
+| Hand-eye Calibration | Hand-eye Calibration | 估计相机、末端和机器人基座之间的外参关系。 |
 | Policy | Policy | 从观测/状态到动作分布的映射 $\pi(a\mid s)$。 |
 | Value / Q | Value Function / Action-Value Function | 估计状态或状态-动作对的期望累计回报。 |
 | RL | Reinforcement Learning | 通过最大化累计回报学习策略。 |
@@ -12,23 +23,40 @@
 | Online RL | Online Reinforcement Learning | 训练中用当前策略继续与环境交互并收集新数据。 |
 | Offline-to-Online | Offline-to-Online RL | 先用离线数据初始化，再通过在线交互继续优化。 |
 | Model-free RL | Model-free Reinforcement Learning | 不显式学习并规划环境动力学，直接学习价值或策略。 |
-| Model-based RL | Model-based Reinforcement Learning | 学习/使用环境模型做想象、规划、价值估计或数据生成。 |
+| Model-based RL / MBRL | Model-based Reinforcement Learning | 学习/使用动力学或奖励模型做 imagined rollout、规划、价值估计或策略优化；它是决策/RL 路线，不等于所有 WM。 |
 | On-policy | On-policy RL | 主要使用当前策略采样的数据更新当前策略，例如 PPO。 |
 | Off-policy | Off-policy RL | 可用其他/旧策略数据更新当前策略，例如 SAC。 |
 | BC | Behavior Cloning | 用监督学习直接拟合示范动作。 |
 | IL | Imitation Learning | 从专家示范学习行为的总称，BC 是最常见形式。 |
 | OOD | Out-of-Distribution | 超出训练数据覆盖范围的观测、动作、任务或环境。 |
-| WM | World Model | 预测环境动态或学习可用于预测/决策的内部世界表征。 |
+| WM | World Model | 广义的环境表征、未来预测和场景生成范式，可覆盖 JEPA latent、视频、状态和 3D/4D 表示；不要求自带 planner。 |
+| JEPA | Joint Embedding Predictive Architecture | 在表征空间预测目标时空块，通常避免逐像素重建，强调可预测和可迁移的 latent dynamics。 |
+| Video World Model | Video World Model | 根据历史、动作或条件预测/生成未来视频或视频潜变量的世界模型。 |
+| 3D/4D World Model | 3D/4D World Model | 建模几何、对象、视角与时间演化的世界表征，可使用点云、3D Gaussian 或隐式场。 |
+| Action-conditioned WM | Action-conditioned World Model | 将 action 作为条件并检验未来表征/视频/3D 状态是否对动作敏感。 |
 | WAM | World Action Model | 将世界未来预测与动作生成联合或紧密耦合的具身模型范式。 |
 | VLM | Vision-Language Model | 联合处理视觉和语言的多模态模型。 |
 | VLA | Vision-Language-Action Model | 由视觉、语言及可能的状态历史直接生成机器人动作的模型。 |
+| Transformer | Transformer | 以 self-attention 和前馈网络处理 token 序列的 backbone；可接 next-token、回归、diffusion 或 flow head。 |
+| Self-Attention | Self-Attention | 用 Query/Key/Value 计算序列内 token 关系的注意力机制。 |
+| Q/K/V | Query / Key / Value | attention 中用于匹配、寻址和值聚合的三组线性投影。 |
+| Causal Mask | Causal Attention Mask | 限制位置只能读取当前及过去 token 的 mask，常用于自回归生成。 |
+| Hidden State | Hidden State / Representation | Transformer 中间层的上下文表征，常见形状为 `[B,L,D]`。 |
 | Action Token | Action Tokenization | 将连续动作离散化为 token，用序列模型预测。 |
 | Action Chunk | Action Chunking | 一次预测未来多个时间步动作，降低决策频率并利用局部时序结构。 |
+| Diffusion | Diffusion / Denoising Diffusion | 先向数据加噪、再学习反向去噪的生成建模框架。 |
+| Noise Schedule | Noise Schedule | 定义 diffusion 各时间步信噪比或噪声强度的日程。 |
+| Epsilon / x0 / v Prediction | Epsilon / x0 / v Parameterization | diffusion 网络预测噪声、干净样本或速度参数化的三类常见目标。 |
+| Denoising Step | Denoising Step | 给定带噪样本、时间步和条件，执行一次 scheduler 反向更新。 |
 | Flow Matching | Flow Matching | 学习连续向量场，将简单分布传输到目标动作分布。 |
+| Velocity Field | Conditional Velocity Field | flow matching 中的条件速度函数 $v_\theta(x,t,C)$，描述样本沿生成路径的变化方向。 |
+| Probability Path | Probability Path | 从源分布到数据分布的连续概率路径；flow matching 在路径上回归速度。 |
+| ODE Sampling | Ordinary Differential Equation Sampling | 从噪声初值出发，用 ODE solver 积分速度场得到样本。 |
+| DiT | Diffusion Transformer | 用 Transformer block 作为 diffusion/视频生成 backbone 的架构范式。 |
 | Diffusion Policy | Diffusion-based Policy | 通过条件去噪过程生成动作序列的策略。 |
 | MPC | Model Predictive Control | 用模型滚动预测有限时域，优化动作后只执行前几步并重新规划。 |
 | Latent Dynamics | Latent Dynamics Model | 在压缩的潜空间而非原始像素/状态空间中预测演化。 |
-| Imagined Rollout | Imagination Rollout | 在学习到的 world model 中生成虚拟轨迹。 |
+| Imagined Rollout | Imagination Rollout | 在学习到的动力学/奖励模型中生成虚拟轨迹，常用于 MBRL 的规划、价值或策略更新。 |
 | Model Bias | Model Bias | 学习模型与真实环境不一致导致的系统性决策误差。 |
 | Sim-to-Real | Simulation-to-Reality | 将仿真中训练的策略迁移到真实机器人。 |
 | Teleoperation | Teleoperation | 人类远程控制机器人，用于完成任务或采集示范。 |
@@ -45,10 +73,11 @@
 - **Offline RL**：训练期没有新的环境交互，数据集固定。
 - **Off-policy RL**：更新策略时允许使用非当前策略产生的数据；它可以发生在 online 训练中。
 
-### World Model vs 视频生成模型
+### World Model vs MBRL vs 视频/3D 生成
 
-- 视频生成模型可以是 world model 的组件，但只有在预测对动作条件敏感、并对决策有用时，才更接近具身决策中的 world model。
-- 不生成可见 RGB 的潜空间动力学也可以是 world model。
+- **WM** 是广义的环境表征/预测/生成范式，JEPA、视频、状态和 3D/4D 都可能属于 WM。
+- **视频/3D 生成模型**的 world-model 解释取决于时间、动作、视角或物理状态建模；控制价值由动作条件、时间一致性和下游任务结果共同衡量。
+- **MBRL** 关心模型是否被用于 rollout、MPC、价值或策略更新；它可以使用不可见的 latent dynamics，不要求生成 RGB 视频或 3D 场景。
 
 ### VLA vs WAM
 
@@ -56,8 +85,13 @@
 - WAM 强调未来世界与动作之间的联合或耦合建模。
 - 两者边界可能重叠；判断时应看训练目标和部署时数据流，而不只看论文自称。
 
-### Model-based RL vs WAM
+### MBRL vs WAM
 
-- Model-based RL 是更广泛的算法类别，常学习紧凑动力学并用于规划或价值学习。
-- WAM 通常面向大规模具身基础模型，结合视觉/语言/动作，并可能由视频生成或多模态模型扩展而来。
+- MBRL 是以模型辅助决策为中心的 RL 方法类别，核心证据是规划、价值/策略更新、回报和样本效率。
+- WAM 强调世界未来表征与动作生成的联合或紧密耦合，通常面向视觉/语言/动作基础模型；它可以包含 MBRL 成分，但两者不是同义词。
 
+### Transformer vs Diffusion vs Flow Matching
+
+- **Transformer** 通常是处理 token 和条件信息的 backbone；它本身不规定输出必须是离散 token、diffusion 还是 flow。
+- **Diffusion** 训练去噪/重建参数化，推理沿反向噪声日程迭代；**Flow Matching** 训练路径上的速度场，推理用 ODE solver 积分。
+- 二者都可以由 Transformer 实现条件网络，也都可以生成连续 action chunk；应比较实际 loss、路径、采样步数和闭环延迟，而不是只比较名称。

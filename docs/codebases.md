@@ -1,94 +1,103 @@
 # 代码仓、数据与基准
 
-优先链接官方仓库或官方项目页。版本、硬件和许可证可能变化，实际使用前请查看对应仓库的 README 与 release。
+优先链接官方仓库或官方项目页。
 
-## 1. 用户指定的核心仓库
+## 1. 核心仓库
 
-| 项目 | 定位 | 推荐入口 |
-| --- | --- | --- |
-| StarVLA | 模块化 VLA 研究与工程平台 | [GitHub](https://github.com/starVLA/starVLA) · [Docs/Project](https://starvla.github.io/) · [Paper](https://arxiv.org/abs/2604.05014) |
-| RLinf | 面向具身/智能体基础模型的可扩展 RL 后训练基础设施 | [GitHub](https://github.com/RLinf/RLinf) · [Docs](https://rlinf.readthedocs.io/) · [Paper](https://arxiv.org/abs/2509.15965) |
-| FastWAM | Fast-WAM 官方训练与评测代码 | [GitHub](https://github.com/yuantianyuan01/FastWAM) · [Project](https://yuantianyuan01.github.io/FastWAM/) · [Paper](https://arxiv.org/abs/2603.16666) |
-| OpenPI | Physical Intelligence 的 π0 / π0.5 开源实现与模型入口 | [GitHub](https://github.com/Physical-Intelligence/openpi) · [π0.5 Paper](https://arxiv.org/abs/2504.16054) |
+| 项目         | 定位                                                    | 推荐入口                                                                                                                                        |
+| ------------ | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| StarVLA      | 模块化 VLA 研究与工程平台                               | [GitHub](https://github.com/starVLA/starVLA) · [Docs/Project](https://starvla.github.io/) · [Paper](https://arxiv.org/abs/2604.05014)                  |
+| RLinf        | 面向具身/智能体基础模型的可扩展 RL 后训练基础设施       | [GitHub](https://github.com/RLinf/RLinf) · [Docs](https://rlinf.readthedocs.io/) · [Paper](https://arxiv.org/abs/2509.15965)                           |
+| FastWAM      | Fast-WAM 官方训练与评测代码                             | [GitHub](https://github.com/yuantianyuan01/FastWAM) · [Project](https://yuantianyuan01.github.io/FastWAM/) · [Paper](https://arxiv.org/abs/2603.16666) |
+| OpenPI       | Physical Intelligence 的 π0 / π0.5 开源实现与模型入口 | [GitHub](https://github.com/Physical-Intelligence/openpi) · [π0.5 Paper](https://arxiv.org/abs/2504.16054)                                          |
+| bimanual-vla | 双臂 VLA 真机部署入口与运行参考                         | [GitHub](https://github.com/SUNNYsyy2005/bimanual-vla)                                                                                             |
 
 StarVLA 与 RLinf 的直接组合示例：
 
 - [RL on StarVLA Models](https://rlinf.readthedocs.io/en/latest/rst_source/examples/embodied/starvla.html)
 - [RL with ManiSkill Benchmark](https://rlinf.readthedocs.io/en/latest/rst_source/examples/embodied/maniskill.html)
 
-## 2. VLA / 模仿学习
+## 2. 模型基础
 
-| 项目 | 适合做什么 | 链接 |
-| --- | --- | --- |
-| OpenVLA | 阅读一个完整开源 VLA 的训练、微调和部署 | [GitHub](https://github.com/openvla/openvla) |
-| Octo | 通用机器人策略与多数据集预训练/微调 | [GitHub](https://github.com/octo-models/octo) |
-| LeRobot | 低门槛真实机器人数据、策略、训练与设备生态 | [GitHub](https://github.com/huggingface/lerobot) · [Docs](https://huggingface.co/docs/lerobot/) |
-| robomimic | 行为克隆与离线示范学习的干净基线 | [GitHub](https://github.com/ARISE-Initiative/robomimic) · [Project](https://robomimic.github.io/) |
-| Diffusion Policy | diffusion 动作策略的官方实现 | [GitHub](https://github.com/real-stanford/diffusion_policy) |
-| ACT | 低成本双臂操作与 action chunking | [GitHub](https://github.com/tonyzhaozh/act) |
-| CALVIN | 长时程语言条件操作与评测 | [GitHub](https://github.com/mees/calvin) · [Paper](https://arxiv.org/abs/2112.03227) |
+这些仓库用于理解模型本身。
 
-## 3. RL 与 World Model
+| 项目          | 原语                   | 简介                                                       | 链接                                                                                                 |
+| ------------- | ---------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Transformers  | Transformer backbone   | token、attention、mask、预训练模型和 `[B,L,D]` 张量流   | [GitHub](https://github.com/huggingface/transformers) · [Docs](https://huggingface.co/docs/transformers/) |
+| Diffusers     | Diffusion / DiT 工具链 | scheduler、epsilon/x0/v 参数化和扩散模型实验              | [GitHub](https://github.com/huggingface/diffusers) · [Docs](https://huggingface.co/docs/diffusers/)       |
+| Flow Matching | Flow matching          | probability path、velocity field 和 ODE 采样实现          | [GitHub](https://github.com/facebookresearch/flow_matching)                                             |
+| DiT           | Diffusion Transformer  | Transformer 作为 latent diffusion backbone 的最小研究代码 | [GitHub](https://github.com/facebookresearch/DiT)                                                       |
 
-| 项目 | 类型 | 链接 |
-| --- | --- | --- |
-| RLinf | VLA/基础模型的大规模 RL 后训练 | [GitHub](https://github.com/RLinf/RLinf) |
-| CleanRL | 单文件 RL 实现，适合学习 PPO/SAC 等算法细节 | [GitHub](https://github.com/vwxyzjn/cleanrl) · [Docs](https://docs.cleanrl.dev/) |
-| Stable-Baselines3 | 易用的经典 model-free RL 基线 | [GitHub](https://github.com/DLR-RM/stable-baselines3) · [Docs](https://stable-baselines3.readthedocs.io/) |
-| d3rlpy | Offline RL 算法与数据接口 | [GitHub](https://github.com/takuseno/d3rlpy) · [Docs](https://d3rlpy.readthedocs.io/) |
-| TD-MPC2 | 潜空间 world model + MPC，覆盖 online 与 multi-task offline | [GitHub](https://github.com/nicklashansen/tdmpc2) · [Project](https://www.tdmpc2.com/) |
-| DreamerV3 | 潜空间想象式 model-based RL | [GitHub](https://github.com/danijar/dreamerv3) |
-| Minari | Offline RL 数据集 API 与数据目录 | [GitHub](https://github.com/Farama-Foundation/Minari) · [Docs](https://minari.farama.org/) |
+## 3. VLA 与动作策略
 
-## 4. 仿真、环境与基准
+| 项目             | 简介                                    | 链接                                                                                                                  |
+| ---------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| OpenVLA          | 阅读一个完整开源 VLA 的训练、微调和部署 | [GitHub](https://github.com/openvla/openvla)                                                                             |
+| OpenVLA-OFT      | OpenVLA 的效率优化微调与推理           | [GitHub](https://github.com/moojink/openvla-oft)                                                                         |
+| OpenPI           | π0 / π0.5 的开源实现、配置与推理接口  | [GitHub](https://github.com/Physical-Intelligence/openpi) · [Docs](https://github.com/Physical-Intelligence/openpi#readme) |
+| Octo             | 通用机器人策略与多数据集预训练/微调     | [GitHub](https://github.com/octo-models/octo)                                                                            |
+| Diffusion Policy | diffusion 动作策略的官方实现            | [GitHub](https://github.com/real-stanford/diffusion_policy)                                                              |
+| ACT              | 低成本双臂操作与 action chunking        | [GitHub](https://github.com/tonyzhaozh/act)                                                                              |
 
-| 项目 | 特点 | 推荐用途 | 链接 |
-| --- | --- | --- | --- |
-| MuJoCo | 成熟、通用的接触动力学仿真 | 经典控制、算法原型 | [GitHub](https://github.com/google-deepmind/mujoco) · [Docs](https://mujoco.readthedocs.io/) |
-| Gymnasium | 标准 RL 环境 API | 算法接口与小实验 | [GitHub](https://github.com/Farama-Foundation/Gymnasium) · [Docs](https://gymnasium.farama.org/) |
-| ManiSkill | GPU 并行机器人操作、数据生成与评测 | 单机仿真操作、VLA/RL 评测 | [GitHub](https://github.com/mani-skill/ManiSkill) · [Project](https://maniskill.ai/) |
-| Isaac Lab | 基于 Isaac Sim 的 GPU 加速机器人学习框架 | 大规模 RL、sim-to-real、复杂传感器 | [GitHub](https://github.com/isaac-sim/IsaacLab) · [Docs](https://isaac-sim.github.io/IsaacLab/) |
-| robosuite | MuJoCo 机器人操作任务框架 | 模仿学习、控制器对比 | [GitHub](https://github.com/ARISE-Initiative/robosuite) · [Docs](https://robosuite.ai/) |
-| LIBERO | 语言条件、知识迁移与 lifelong 操作 | VLA/IL 标准化评测 | [Project](https://libero-project.github.io/main.html) · [GitHub](https://github.com/Lifelong-Robot-Learning/LIBERO) |
-| RoboTwin | 数字孪生数据生成与双臂操作任务 | 操作泛化与大规模数据 | [GitHub](https://github.com/RoboTwin-Platform/RoboTwin) |
+## 4. RL 与 MBRL
 
-## 5. 机器人数据入口
+| 项目              | 类型                                                               | 链接                                                                                                 |
+| ----------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| RLinf             | VLA/基础模型的大规模 RL 后训练                                     | [GitHub](https://github.com/RLinf/RLinf)                                                                |
+| CleanRL           | 单文件 RL 实现，包含 PPO/SAC/DQN 等算法                            | [GitHub](https://github.com/vwxyzjn/cleanrl) · [Docs](https://docs.cleanrl.dev/)                          |
+| Stable-Baselines3 | 易用的经典 model-free RL 基线                                      | [GitHub](https://github.com/DLR-RM/stable-baselines3) · [Docs](https://stable-baselines3.readthedocs.io/) |
+| DQN Zoo           | DQN 及其变体的参考实现                                             | [GitHub](https://github.com/google-deepmind/dqn_zoo)                                                     |
+| d3rlpy            | Offline RL 算法与数据接口                                          | [GitHub](https://github.com/takuseno/d3rlpy) · [Docs](https://d3rlpy.readthedocs.io/)                     |
+| Implicit Q-Learning | IQL 参考实现                                                       | [GitHub](https://github.com/ikostrikov/implicit_q_learning)                                              |
+| TD-MPC2           | 潜空间动力学 + MPC 的 MBRL 基线                                    | [GitHub](https://github.com/nicklashansen/tdmpc2) · [Project](https://www.tdmpc2.com/)                    |
+| DreamerV3         | 用 latent dynamics 做 imagined rollout 和 actor-critic 更新的 MBRL | [GitHub](https://github.com/danijar/dreamerv3)                                                          |
+| Minari            | Offline RL 数据集 API 与数据目录                                   | [GitHub](https://github.com/Farama-Foundation/Minari) · [Docs](https://minari.farama.org/)                |
 
-| 数据/生态 | 内容 | 链接 |
-| --- | --- | --- |
-| Open X-Embodiment | 多机构、多本体机器人轨迹集合 | [Project](https://robotics-transformer-x.github.io/) |
-| DROID | 大规模、场景多样的真实机器人操作数据 | [Project](https://droid-dataset.github.io/) |
-| BridgeData V2 | 通用机器人操作轨迹 | [Project](https://rail-berkeley.github.io/bridgedata/) |
-| LeRobot Datasets | 与 LeRobot policy/device 工具统一的数据格式与社区数据 | [Hugging Face](https://huggingface.co/lerobot) |
-| robomimic Datasets | 多质量示范、状态/图像操作数据 | [Docs](https://robomimic.github.io/docs/datasets/overview.html) |
+## 5. World Model：JEPA、视频与 3D
 
-## 6. 按目标选技术栈
+World Model 在这里是广义的环境表征、未来预测和场景生成路线；动作决策能力根据各仓库的任务和评测单独记录。
 
-| 目标 | 最小组合 | 原因 |
-| --- | --- | --- |
-| 第一次跑机器人行为克隆 | robomimic + robosuite | 文档完整、数据和基线清晰 |
-| 低成本真实机器人入门 | LeRobot + 支持的硬件 | 数据采集、训练和部署接口较统一 |
-| 单机 GPU 做操作 RL | ManiSkill + CleanRL/SB3 | GPU 并行环境与算法基线组合直接 |
-| 学 model-based RL | TD-MPC2 + DMControl/ManiSkill | 世界模型、价值和 MPC 路径清晰 |
-| 学开源 VLA | OpenVLA 或 StarVLA + LIBERO | 代码可读，并有常见评测入口 |
-| 做 VLA 的 RL 后训练 | StarVLA + RLinf + LIBERO/ManiSkill | 已有直接集成示例 |
-| 研究 WAM 推理效率 | FastWAM + LIBERO/RoboTwin | 对应论文的训练/测试设定 |
-| 大规模 sim-to-real | Isaac Lab + RL 框架 | 高吞吐仿真与传感器/机器人生态 |
+| 项目                  | 方向                              | 推荐用途                                     | 链接                                                                                                       |
+| --------------------- | --------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| V-JEPA 2              | JEPA / latent predictive learning | 未来表征、物理理解与动作条件研究入口         | [GitHub](https://github.com/facebookresearch/vjepa2) · [Paper](https://arxiv.org/abs/2506.09985)                |
+| Cosmos Predict2       | 视频世界模型 / physical AI 生成   | 视频未来预测、数据生成与世界模型接口探索     | [GitHub](https://github.com/nvidia-cosmos/cosmos-predict2) · [Project](https://www.nvidia.com/en-us/ai/cosmos/) |
+| VGGT                  | 3D 几何与多视图场景表示           | 相机/深度/点云几何，为 3D WM 提供结构化表征  | [GitHub](https://github.com/facebookresearch/vggt)                                                            |
+| 3D Gaussian Splatting | 3D 场景表示与新视角合成           | 动态/可渲染场景表示的基础组件，不等于完整 WM | [GitHub](https://github.com/graphdeco-inria/gaussian-splatting)                                               |
 
-## 7. 复现实验前的检查单
+## 6. 仿真、环境与基准
 
-- [ ] 论文与代码是否对应同一版本/commit？
-- [ ] checkpoint、数据集和归一化统计是否匹配？
-- [ ] 观测相机数量、分辨率、历史长度是否一致？
-- [ ] 动作空间是关节、末端位姿还是 delta control？控制频率是多少？
-- [ ] 是否使用 action chunk、temporal ensemble 或 replanning？
-- [ ] 评测 seed、任务初始状态与成功判定是否一致？
-- [ ] 是否区分训练 GPU 时、环境步数和真实机器人小时数？
-- [ ] 推理延迟是否包含视觉编码、未来生成、规划和控制接口？
+| 项目         | 特点                                     | 推荐用途                           | 链接                                                                                                           |
+| ------------ | ---------------------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| MuJoCo       | 成熟、通用的接触动力学仿真               | 经典控制、算法原型                 | [GitHub](https://github.com/google-deepmind/mujoco) · [Docs](https://mujoco.readthedocs.io/)                        |
+| Gymnasium    | 标准 RL 环境 API                         | 算法接口与小实验                   | [GitHub](https://github.com/Farama-Foundation/Gymnasium) · [Docs](https://gymnasium.farama.org/)                    |
+| ManiSkill    | GPU 并行机器人操作、数据生成与评测       | 单机仿真操作、VLA/RL 评测          | [GitHub](https://github.com/mani-skill/ManiSkill) · [Project](https://maniskill.ai/)                                |
+| Isaac Lab    | 基于 Isaac Sim 的 GPU 加速机器人学习框架 | 大规模 RL、sim-to-real、复杂传感器 | [GitHub](https://github.com/isaac-sim/IsaacLab) · [Docs](https://isaac-sim.github.io/IsaacLab/)                     |
+| robosuite    | MuJoCo 机器人操作任务框架                | 操作控制器、数据生成与仿真对比     | [GitHub](https://github.com/ARISE-Initiative/robosuite) · [Docs](https://robosuite.ai/)                             |
+| LIBERO       | 语言条件、知识迁移与 lifelong 操作       | VLA 标准化评测                     | [Project](https://libero-project.github.io/main.html) · [GitHub](https://github.com/Lifelong-Robot-Learning/LIBERO) |
+| CALVIN       | 长时程语言条件操作                       | VLA 闭环与任务链评测               | [GitHub](https://github.com/mees/calvin) · [Paper](https://arxiv.org/abs/2112.03227)                                |
+| Meta-World   | 多任务机械臂操作                         | 多任务/组合泛化与 RL success rate  | [Project](https://meta-world.github.io/) · [GitHub](https://github.com/Farama-Foundation/Metaworld)                 |
+| RoboTwin 2.0 | 数字孪生数据生成与双臂操作任务           | 操作泛化与大规模数据               | [GitHub](https://github.com/RoboTwin-Platform/RoboTwin)                                                           |
+| RoboCasa     | 家庭厨房与长时程操作                     | WM/WAM、VLA 与 RL 的复杂接触任务   | [GitHub](https://github.com/robocasa/robocasa)                                                                    |
+| DMControl    | 连续控制任务套件                         | MBRL 原型、动力学和规划对比        | [GitHub](https://github.com/google-deepmind/dm_control)                                                           |
 
-## 8. 不建议一开始做的事
+## 7. 机器人数据（部分）
 
-- 同时安装多个重型仿真器；先选一个跑通闭环。
-- 一上来训练 7B 级 VLA；先用预训练 checkpoint 做推理或小规模微调。
-- 只比较 success rate，不记录数据量、算力、环境步数与延迟。
-- 把视频生成质量当成机器人控制质量；WAM 需要闭环任务指标。
+| 数据/生态         | 内容                                 | 链接                                                |
+| ----------------- | ------------------------------------ | --------------------------------------------------- |
+| Open X-Embodiment | 多机构、多本体机器人轨迹集合         | [Project](https://robotics-transformer-x.github.io/)   |
+| DROID             | 大规模、场景多样的真实机器人操作数据 | [Project](https://droid-dataset.github.io/)            |
+| BridgeData V2     | 通用机器人操作轨迹                   | [Project](https://rail-berkeley.github.io/bridgedata/) |
+
+## 8. 按目标选技术栈
+
+| 目标                  | 最小组合                                          | 原因                                                           |
+| --------------------- | ------------------------------------------------- | -------------------------------------------------------------- |
+| 第一次跑 VLA 闭环评测 | OpenVLA/OpenVLA-OFT + LIBERO                    | 有公开 checkpoint、任务定义与成功判定                          |
+| 单机 GPU 做操作 RL    | ManiSkill + CleanRL/SB3                           | GPU 并行环境与算法基线组合直接                                 |
+| 学 MBRL               | TD-MPC2 + DMControl/ManiSkill                     | 动力学模型、imagined rollout、价值和 MPC 路径清晰              |
+| 学 WM 表征/视频/3D    | V-JEPA 2 + Cosmos Predict2 + VGGT                 | 分开看 latent prediction、视频生成和几何表征，再接动作条件验证 |
+| 学开源 VLA            | OpenVLA/OpenVLA-OFT/OpenPI + LIBERO              | 代码可读，并有常见评测入口                                     |
+| 做 VLA 的 RL 后训练   | StarVLA + RLinf + LIBERO/ManiSkill                | 已有直接集成示例                                               |
+| 研究 WAM 推理效率     | FastWAM + LIBERO/RoboTwin                         | 对应论文的训练/测试设定                                        |
+| 大规模 sim-to-real    | Isaac Lab + RL 框架                               | 高吞吐仿真与传感器/机器人生态                                  |
+| 双臂真机部署          | bimanual-vla + 已完成 benchmark 的 VLA checkpoint | 沿用仓库的硬件接口、启动流程和安全检查                         |
