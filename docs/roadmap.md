@@ -1,189 +1,118 @@
-# 8 周具身智能入门路线
+# 具身智能章节式学习路线
 
-默认每周投入 8–12 小时。目标是形成一个能运行、能比较、能解释的最小研究闭环，而不是读完所有论文。
+章节可以根据研究问题回看、跳读或并行。
 
 ## 总览
 
-| 周 | 主题 | 最小产出 |
-| --- | --- | --- |
-| 1 | MDP、控制与机器人接口 | 手写一页 MDP/控制频率/动作空间说明 |
-| 2 | 行为克隆与 Offline RL | 跑通 BC，解释分布偏移 |
-| 3 | Online RL | 跑通 PPO 或 SAC，画学习曲线 |
-| 4 | World Model / Model-based RL | 跑一个 TD-MPC2 或 Dreamer 类实验 |
-| 5 | VLM → VLA | 拆解 OpenVLA/StarVLA 的数据流 |
-| 6 | π0.5 与开放世界泛化 | 做论文复盘与 ablation 设计 |
-| 7 | WAM 与 Fast-WAM | 画清训练期/测试期计算图并比较延迟 |
-| 8 | RL 后训练与综合项目 | 在统一基准形成可复现实验报告 |
+| 章节    | 主题                                | 路线      |
+| ------- | ----------------------------------- | --------- |
+| 第 1 章 | MDP、机器人学与控制接口             | 共同基础  |
+| 第 2 章 | 模型基础、动作策略与 benchmark 协议 | 共同基础  |
+| 第 3 章 | Model-free RL：Online 与 Offline     | RL/MBRL   |
+| 第 4 章 | Model-based RL（MBRL）              | RL/MBRL   |
+| 第 5 章 | VLM → VLA                          | VLA       |
+| 第 6 章 | World Model：JEPA、视频与 3D        | WM        |
+| 第 7 章 | WAM 与 Fast-WAM                     | WAM/交叉  |
+| 第 8 章 | RL 后训练与综合项目                 | 交叉/可选 |
 
-## Week 1｜MDP、控制与机器人数据
+## 实操路线与依赖
 
-### 学什么
+第 1–2 章是共同基础；第 3–7 章按研究问题并行推进：
 
-- 状态 $s$、观测 $o$、动作 $a$、奖励 $r$、折扣 $\gamma$。
-- 部分可观测性：相机图像通常不是完整状态。
-- 动作空间：joint position / velocity / torque、end-effector pose、delta action。
-- policy rate、control rate、action horizon、闭环 replanning。
-
-### 做什么
-
-1. 阅读 Sutton & Barto 的 MDP、TD 和 policy gradient 相关章节。
-2. 在 Gymnasium 或 MuJoCo 跑一个随机策略并记录 transition。
-3. 为一个机械臂任务写出 observation、action、reward 和 termination。
-
-### 验收
-
-你能解释“图像输入 + 末端位姿 delta 输出”的策略为何是 POMDP，以及提高 action chunk 长度会带来什么延迟/反馈权衡。
-
-## Week 2｜行为克隆与 Offline RL
-
-### 学什么
-
-- 最大似然行为克隆、covariate shift、DAgger 思想。
-- Offline RL 的分布外动作与 Q 过估计。
-- CQL、IQL、Decision Transformer 三条路线的差异。
-
-### 做什么
-
-- 用 robomimic 跑一个 BC baseline，或用 LeRobot 训练一个小策略。
-- 改变示范数量/质量，记录成功率。
-- 读 Offline RL Tutorial，再选 CQL 或 IQL 精读。
-
-### 验收
-
-提交一张表：示范数、训练 loss、闭环成功率、三个主要失败模式。不要用训练 loss 代替控制效果。
-
-## Week 3｜Online Model-free RL
-
-### 学什么
-
-- on-policy vs off-policy。
-- PPO 的 clipped update；SAC 的最大熵与 replay buffer。
-- reward design、探索、样本效率与安全。
-
-### 做什么
-
-- 在简单连续控制任务上跑 PPO 或 SAC。
-- 至少做 3 个 seed，画均值和方差。
-- 记录环境步数，而不只记录 wall-clock 时间。
-
-### 验收
-
-你能说明 PPO 和 SAC 分别在哪些数据复用、稳定性和实现复杂度上取舍。
-
-## Week 4｜World Model 与 Model-based RL
-
-### 学什么
-
-- 表征模型、潜空间动力学、奖励/终止预测。
-- imagined rollout、MPC、actor-critic through imagination。
-- model bias、uncertainty 与 planning horizon。
-
-### 做什么
-
-- 精读 World Models、Dreamer 或 TD-MPC2。
-- 运行 TD-MPC2 的小环境配置，或复现一个潜空间 rollout。
-- 对比 model-free 基线的环境步数与训练计算量。
-
-### 验收
-
-画出训练和部署两张计算图，标出真实环境数据、模型生成数据和策略更新分别在哪里发生。
-
-## Week 5｜从 VLM 到 VLA
-
-### 学什么
-
-- vision encoder / VLM backbone、语言指令、action head。
-- 离散 action token、连续回归、diffusion、flow matching。
-- action chunking、temporal ensemble、跨本体动作归一化。
-
-### 做什么
-
-- 读 RT-1/RT-2，再读 OpenVLA 或 π0。
-- 在 OpenVLA 或 StarVLA 中定位：dataset、processor、backbone、action head、loss、rollout evaluator。
-- 用预训练 checkpoint 完成一次推理或离线 batch 前向。
-
-### 验收
-
-提交一张模块表：输入/输出 shape、token/连续动作、loss、训练数据、推理频率、机器人适配点。
-
-## Week 6｜π0.5 与开放世界泛化
-
-### 学什么
-
-- 异构数据协同训练：多机器人数据、web 数据、语义子任务与动作监督。
-- 高层语义预测和低层动作之间的关系。
-- seen / unseen environment、task、object、embodiment 的不同泛化层级。
-
-### 做什么
-
-- 精读 π0.5 方法图、数据混合和 ablation。
-- 阅读 OpenPI 中 π0.5 的配置与 policy 接口。
-- 设计一个不需要大规模训练的 ablation：例如移除语言、缩短历史或改变 action horizon。
-
-### 验收
-
-能区分“语言理解泛化”“视觉场景泛化”“技能组合泛化”“跨本体迁移”，并为每项选择不同评测。
-
-## Week 7｜WAM 与 Fast-WAM
-
-### 学什么
-
-- WAM 的级联式和联合式路线。
-- 显式未来生成 vs 潜空间未来表征。
-- 视频协同训练的表征收益与测试时生成成本。
-
-### 做什么
-
-- 先读 WAM survey 的定义与 taxonomy，再读 Fast-WAM。
-- 在 FastWAM 代码里定位 video objective、action objective 和 inference path。
-- 设计统一延迟评测：相同硬件、batch size、相机数、分辨率和 action horizon。
-
-### 验收
-
-提交一张二维表：是否训练期预测未来 × 是否测试期生成未来，并填写性能、延迟、显存和失败模式。
-
-## Week 8｜RL 后训练与综合项目
-
-### 推荐题目
-
-**在 LIBERO 或 ManiSkill 上比较 BC/VLA baseline 与 RL 后训练版本。**
-
-### 路线
-
-1. 固定任务、数据、初始 checkpoint 与评测协议。
-2. 跑通 StarVLA baseline。
-3. 参考 RLinf 的 StarVLA/ManiSkill 示例做 RL 后训练。
-4. 比较成功率、环境步数、GPU 时、推理延迟和 OOD 任务。
-5. 分析 reward hacking、灾难性遗忘与训练不稳定。
-
-### 最终报告模板
-
-```text
-1. 问题与假设
-2. 环境、数据和策略接口
-3. 基线与唯一改动
-4. 训练预算与评测协议
-5. 主结果（均值、方差、seed）
-6. 失败案例
-7. 计算成本和推理延迟
-8. 结论、局限与下一步
+```mermaid
+flowchart TD
+    F["第 1–2 章：共同基础"] --> V["VLA 路线：第 5 章<br/>策略闭环 + benchmark"]
+    F --> W["WM 路线：第 6 章<br/>JEPA / video / 3D"]
+    F --> R["RL/MBRL 路线：第 3–4 章<br/>PPO/SAC + dynamics/MPC"]
+    F --> A["WAM 路线：第 7 章<br/>未来表征 × 动作生成"]
+    W -. "仅在用于决策时" .-> R
+    V -. "可选 RL 后训练" .-> R
+    V -. "动作与未来联合" .-> A
+    W -. "未来表征接动作" .-> A
+    V --> E["第 8 章：RL 后训练与交叉项目"]
+    W --> E
+    R --> E
+    A --> E
 ```
 
-## 硬件较少时的替代路线
+## 第 1 章｜MDP、机器人学与控制接口
 
-| 条件 | 建议 |
-| --- | --- |
-| 无 GPU | 阅读 + Gymnasium 小任务 + 代码结构追踪 |
-| 单张消费级 GPU | robomimic/ManiSkill 小任务、预训练 VLA 推理或参数高效微调 |
-| 无真实机器人 | LIBERO、ManiSkill、robosuite；重点做评测严谨性 |
-| 有低成本机械臂 | 先用 LeRobot 做数据采集和 BC，不立即做在线 RL |
-| 多 GPU | 再考虑 StarVLA + RLinf、较大 VLA/WAM 微调 |
+### 项目链接
 
-## 每周复盘的五个问题
+- [Modern Robotics](https://modernrobotics.northwestern.edu/)：运动学、动力学和控制教材。
+- [ModernRobotics](https://github.com/NxRLab/ModernRobotics)：教材配套实现。
+- [Pinocchio](https://github.com/stack-of-tasks/pinocchio)：刚体运动学、动力学和自动微分。
+- [MuJoCo](https://github.com/google-deepmind/mujoco)：接触动力学仿真。
 
-1. 我本周真正跑通了什么？
-2. 训练信号来自示范、奖励还是未来预测？
-3. 最主要的分布偏移是什么？
-4. 成功率之外，成本和失败模式如何？
-5. 下周只允许改一个变量，会改什么？
+## 第 2 章｜模型基础、动作策略与 benchmark
 
+### 项目链接
+
+- [模型基础](model-basics.md)：Transformer、diffusion、flow matching 与 DiT。
+- [Transformers](https://github.com/huggingface/transformers)：Transformer backbone 与多模态模型接口。
+- [Diffusers](https://github.com/huggingface/diffusers)：diffusion、scheduler 和 DiT 工具链。
+- [Flow Matching](https://github.com/facebookresearch/flow_matching)：probability path、velocity field 和 ODE 采样。
+- [DiT](https://github.com/facebookresearch/DiT)：Transformer diffusion backbone。
+- [Diffusion Policy](https://github.com/real-stanford/diffusion_policy)：连续动作 chunk 策略。
+- [OpenPI](https://github.com/Physical-Intelligence/openpi)：π0/π0.5 开源实现。
+
+## 第 3 章｜Model-free RL：Online 与 Offline
+
+### 项目链接
+
+- [Gym](https://github.com/openai/gym)：经典 Gym 环境 API（维护状态以仓库说明为准）。
+- [Gymnasium](https://github.com/Farama-Foundation/Gymnasium)：统一环境 API。
+- [Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3)：PPO、SAC、DQN 等实现。
+- [CleanRL](https://github.com/vwxyzjn/cleanrl)：PPO、SAC、DQN 等单文件实现。
+- [d3rlpy](https://github.com/takuseno/d3rlpy)：IQL、CQL 等 offline RL 实现与数据接口。
+- [Implicit Q-Learning](https://github.com/ikostrikov/implicit_q_learning)：IQL 参考实现。
+- [Minari](https://github.com/Farama-Foundation/Minari)：离线轨迹数据 API。
+
+## 第 4 章｜Model-based RL（MBRL）
+
+### 项目链接
+
+- [TD-MPC2](https://github.com/nicklashansen/tdmpc2)：潜空间动力学、价值学习与 MPC。
+- [DreamerV3](https://github.com/danijar/dreamerv3)：latent dynamics、imagined rollout 与 actor-critic。
+- [World Models](https://worldmodels.github.io/)：latent dynamics + controller 的经典项目。
+- [PlaNet](https://github.com/google-research/planet)：潜空间动力学与规划。
+- [DMControl](https://github.com/google-deepmind/dm_control)：连续控制与 MBRL 环境。
+- [ManiSkill](https://github.com/haosulab/ManiSkill)：GPU 并行操作环境。
+
+## 第 5 章｜从 VLM 到 VLA
+
+### 项目链接
+
+- [OpenVLA](https://github.com/openvla/openvla)：开源 VLA 基线与推理/微调代码。
+- [OpenVLA-OFT](https://github.com/moojink/openvla-oft)：OpenVLA 的优化微调与推理实现。
+- [OpenPI](https://github.com/Physical-Intelligence/openpi)：π0/π0.5 开源实现。
+- [StarVLA](https://github.com/starVLA/starVLA)：模块化 VLA 研究平台。
+- [LIBERO](https://github.com/Lifelong-Robot-Learning/LIBERO)：语言条件操作评测。
+- [CALVIN](https://github.com/mees/calvin)：长时程语言条件操作评测。
+
+## 第 6 章｜World Model：JEPA、视频与 3D
+
+### 项目链接
+
+- [V-JEPA 2](https://github.com/facebookresearch/vjepa2)：JEPA latent predictive learning。
+- [Cosmos Predict2](https://github.com/nvidia-cosmos/cosmos-predict2)：视频世界模型与 physical AI 生成。
+- [VGGT](https://github.com/facebookresearch/vggt)：多视图几何与 3D 场景表示。
+- [3D Gaussian Splatting](https://github.com/graphdeco-inria/gaussian-splatting)：可渲染 3D 场景表示。
+
+## 第 7 章｜WAM 与 Fast-WAM
+
+### 项目链接
+
+- [FastWAM](https://github.com/yuantianyuan01/FastWAM)：WAM 训练与推理代码。
+- [Awesome-WAM](https://github.com/OpenMOSS/Awesome-WAM)：WAM 论文和项目索引。
+- [V-JEPA 2](https://github.com/facebookresearch/vjepa2)：未来表征参考实现。
+- [Cosmos Predict2](https://github.com/nvidia-cosmos/cosmos-predict2)：视频未来生成参考实现。
+
+## 第 8 章｜RL 后训练与综合项目
+
+### 项目链接
+
+- [RLinf](https://github.com/RLinf/RLinf)：VLA/基础模型 RL 后训练基础设施。
+- [StarVLA](https://github.com/starVLA/starVLA)：模块化 VLA 基座。
+- [LIBERO](https://github.com/Lifelong-Robot-Learning/LIBERO)、[ManiSkill](https://github.com/haosulab/ManiSkill)、[RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin)：操作评测环境。
+- [bimanual-vla](https://github.com/SUNNYsyy2005/bimanual-vla)：双臂真机部署入口。
