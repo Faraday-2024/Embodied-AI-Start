@@ -167,6 +167,8 @@ flowchart TD
 
 ## 4. RL 的学习闭环
 
+V、Q、A、Bellman target 以及 DQN、DDPG、TD3、TD3+BC、SAC、PPO、IQL、GRPO、SAPO 的统一推导见[强化学习基础](reinforcement-learning.md)。本节只说明 RL 在整张具身智能知识图中的位置。
+
 ```mermaid
 flowchart LR
     S["状态 / 观测 sₜ"] --> PI["策略 π(a|s)"]

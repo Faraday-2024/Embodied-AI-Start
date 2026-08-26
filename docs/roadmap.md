@@ -58,6 +58,8 @@ flowchart TD
 
 ## 第 3 章｜Model-free RL：Online 与 Offline
 
+先阅读[强化学习基础](reinforcement-learning.md)，用数据来源、价值对象、bootstrap target、策略改进和稳定性机制这五个问题统一理解 DQN、DDPG、TD3、TD3+BC、SAC、PPO 与 IQL；GRPO/SAPO 放在第 8 章的基础模型/VLA 后训练语境中学习。
+
 ### 项目链接
 
 - [Gym](https://github.com/openai/gym)：经典 Gym 环境 API（维护状态以仓库说明为准）。
@@ -110,8 +112,12 @@ flowchart TD
 
 ## 第 8 章｜RL 后训练与综合项目
 
+先比较 PPO 的 Value Critic + GAE、GRPO 的组内相对 Advantage + hard clip，以及 SAPO 的 group-based Advantage + soft gate。GRPO/SAPO 用于 VLA 时，要验证同组 rollout 是否具有可比任务条件、奖励是否可靠、动作概率比是否定义正确，以及成组采样成本是否可接受，不能直接假设 LLM 后训练收益会迁移到具身闭环。
+
 ### 项目链接
 
+- [DeepSeekMath](https://arxiv.org/abs/2402.03300)：GRPO 的原始定义、group-relative Advantage、clip 与 KL 正则。
+- [Soft Adaptive Policy Optimization](https://arxiv.org/abs/2511.20347)：SAPO 的 sigmoid soft gate 与正负非对称温度。
 - [RLinf](https://github.com/RLinf/RLinf)：VLA/基础模型 RL 后训练基础设施。
 - [StarVLA](https://github.com/starVLA/starVLA)：模块化 VLA 基座。
 - [LIBERO](https://github.com/Lifelong-Robot-Learning/LIBERO)、[ManiSkill](https://github.com/haosulab/ManiSkill)、[RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin)：操作评测环境。

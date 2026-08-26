@@ -74,6 +74,8 @@
 | 类别 | 论文 | 核心问题 | 入口 |
 | --- | --- | --- | --- |
 | Online, on-policy | Proximal Policy Optimization Algorithms (PPO) | 如何用 clipped surrogate 稳定策略更新 | [arXiv](https://arxiv.org/abs/1707.06347) |
+| Post-training, group-relative | DeepSeekMath（GRPO） | 用组内相对奖励代替 Value Critic，并以 clip 与 KL 正则更新序列策略 | [arXiv](https://arxiv.org/abs/2402.03300) |
+| Post-training, soft-gated | Soft Adaptive Policy Optimization（SAPO） | 用 sigmoid 软门控与正负非对称温度平滑控制 token-level 更新 | [arXiv](https://arxiv.org/abs/2511.20347) |
 | Online, off-policy | Soft Actor-Critic (SAC) | 最大熵目标、样本复用与连续控制 | [arXiv](https://arxiv.org/abs/1801.01290) |
 | Online, value-based | Human-level control through deep reinforcement learning (DQN) | 离散动作 Q-learning、target network 与 replay buffer | [Nature](https://www.nature.com/articles/nature14236) · [Code](https://github.com/google-deepmind/dqn_zoo) |
 | Offline, value-based | Conservative Q-Learning (CQL) | 通过保守 Q 估计抑制 OOD 动作过估计 | [arXiv](https://arxiv.org/abs/2006.04779) |

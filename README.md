@@ -1,6 +1,8 @@
 # Embodied AI Starter Map｜具身智能入门地图
 
-一个面向初学者的具身智能学习仓库： **VLA、World Model（WM）、Model-based RL（MBRL）、World Action Model（WAM）与强化学习（RL）**，并给出论文、代码、benchmark 与实践路线。
+一个面向初学者的具身智能学习仓库：
+
+ **VLA、World Model（WM）、Model-based RL（MBRL）、World Action Model（WAM）与强化学习（RL）。**
 
 有任何问题可以询问AI工具帮助学习
 
@@ -11,6 +13,7 @@
 | 先建立全局概念                           | [知识图谱](docs/knowledge-map.md)    |
 | 补齐机器人学基础                         | [机器人学知识](docs/robotics.md)     |
 | 学 Transformer、Diffusion、Flow Matching | [模型基础](docs/model-basics.md)     |
+| 学 V、Q、A、经典 RL、GRPO 与 SAPO        | [强化学习基础](docs/reinforcement-learning.md) |
 | 按顺序读论文                             | [论文清单](docs/papers.md)           |
 | 找官方代码和基准                         | [代码仓与工具](docs/codebases.md)    |
 | 按任务选择 benchmark                     | [Benchmark 指南](docs/benchmarks.md) |
@@ -44,7 +47,7 @@ flowchart TD
     SIM --> RL
 ```
 
-最重要的三条区分：
+重要区分：
 
 1. **VLA** 通常直接学习从视觉与语言到动作的策略；**WM** 可以学习潜在状态、未来视频、3D/4D 场景或动作条件的环境演化；**WAM** 将未来世界表征与动作生成耦合起来。
 2. **MBRL** 是用学习到的动力学/奖励模型做规划、价值估计或策略优化的 RL 路线；它可以使用 latent WM，但不等于 JEPA、视频生成或 3D 生成。反过来，WM 也可以只做表征/预测而不直接训练控制策略。
@@ -76,19 +79,19 @@ flowchart TD
 | WM：JEPA / video / 3D | [V-JEPA 2](https://arxiv.org/abs/2506.09985)、[Genie](https://arxiv.org/abs/2402.15391)、[VGGT](https://arxiv.org/abs/2503.11651)                                                     | 自监督未来表征、可交互视频和 3D 几何/场景建模        |
 | MBRL                  | [World Models](https://arxiv.org/abs/1803.10122)、[PlaNet](https://arxiv.org/abs/1811.04551)、[DreamerV3](https://arxiv.org/abs/2301.04104)、[TD-MPC2](https://arxiv.org/abs/2310.16828) | 学习动力学后做 imagined rollout、规划或价值/策略优化 |
 | WAM                   | [World Action Models survey](https://arxiv.org/abs/2605.12090)、[Fast-WAM](https://arxiv.org/abs/2603.16666)                                                                       | 未来世界与动作的耦合，以及测试时未来生成成本         |
-| RL                    | [PPO](https://arxiv.org/abs/1707.06347)、[SAC](https://arxiv.org/abs/1801.01290)、[CQL](https://arxiv.org/abs/2006.04779)、[IQL](https://arxiv.org/abs/2110.06169)                       | online/offline 边界、探索、保守价值与后训练          |
+| RL                    | [PPO](https://arxiv.org/abs/1707.06347)、[SAC](https://arxiv.org/abs/1801.01290)、[CQL](https://arxiv.org/abs/2006.04779)、[IQL](https://arxiv.org/abs/2110.06169)、[GRPO](https://arxiv.org/abs/2402.03300)、[SAPO](https://arxiv.org/abs/2511.20347) | online/offline 边界、探索、保守价值与后训练          |
 
 ### 代码主线
 
-| 方向                  | 推荐仓库                                                                                                                                                                                                                                          | 用途                                                                     |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| VLA                   | [OpenVLA](https://github.com/openvla/openvla)、[OpenVLA-OFT](https://github.com/moojink/openvla-oft)、[OpenPI](https://github.com/Physical-Intelligence/openpi)、[StarVLA](https://github.com/starVLA/starVLA)                                                | 开源 VLA 推理、效率优化、适配与模块拆解                                  |
-| 动作策略              | [Diffusion Policy](https://github.com/real-stanford/diffusion_policy)、[ACT](https://github.com/tonyzhaozh/act)                                                                                                                                         | diffusion / action chunking 的可读实现                                   |
-| WM：JEPA / video / 3D | [V-JEPA 2](https://github.com/facebookresearch/vjepa2)、[Cosmos Predict2](https://github.com/nvidia-cosmos/cosmos-predict2)、[VGGT](https://github.com/facebookresearch/vggt)、[3D Gaussian Splatting](https://github.com/graphdeco-inria/gaussian-splatting) | 自监督潜在预测、视频世界建模与 3D 场景表示；是否能用于动作闭环需单独验证 |
-| MBRL                  | [TD-MPC2](https://github.com/nicklashansen/tdmpc2)、[DreamerV3](https://github.com/danijar/dreamerv3)                                                                                                                                                   | 潜空间动力学、imagined rollout、MPC 与策略优化                           |
-| WAM                   | [FastWAM](https://github.com/yuantianyuan01/FastWAM)                                                                                                                                                                                                 | 视频/世界表征与动作生成的耦合推理                                        |
-| RL / MBRL             | [Gymnasium](https://github.com/Farama-Foundation/Gymnasium)、[Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3)、[CleanRL](https://github.com/vwxyzjn/cleanrl)、[DQN Zoo](https://github.com/google-deepmind/dqn_zoo)、[d3rlpy](https://github.com/takuseno/d3rlpy)、[Implicit Q-Learning](https://github.com/ikostrikov/implicit_q_learning)、[Minari](https://github.com/Farama-Foundation/Minari)、[TD-MPC2](https://github.com/nicklashansen/tdmpc2)、[DreamerV3](https://github.com/danijar/dreamerv3) | PPO、SAC、DQN、IQL 与 MBRL 项目入口 |
-| RL 后训练             | [RLinf](https://github.com/RLinf/RLinf)                                                                                                                                                                                                  | VLA 后训练基础设施                                                        |
+| 方向                  | 推荐仓库                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 用途                                                                     |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| VLA                   | [OpenVLA](https://github.com/openvla/openvla)、[OpenVLA-OFT](https://github.com/moojink/openvla-oft)、[OpenPI](https://github.com/Physical-Intelligence/openpi)、[StarVLA](https://github.com/starVLA/starVLA)                                                                                                                                                                                                                                                                                             | 开源 VLA 推理、效率优化、适配与模块拆解                                  |
+| 动作策略              | [Diffusion Policy](https://github.com/real-stanford/diffusion_policy)、[ACT](https://github.com/tonyzhaozh/act)                                                                                                                                                                                                                                                                                                                                                                                      | diffusion / action chunking 的可读实现                                   |
+| WM：JEPA / video / 3D | [V-JEPA 2](https://github.com/facebookresearch/vjepa2)、[Cosmos Predict2](https://github.com/nvidia-cosmos/cosmos-predict2)、[VGGT](https://github.com/facebookresearch/vggt)、[3D Gaussian Splatting](https://github.com/graphdeco-inria/gaussian-splatting)                                                                                                                                                                                                                                              | 自监督潜在预测、视频世界建模与 3D 场景表示；是否能用于动作闭环需单独验证 |
+| MBRL                  | [TD-MPC2](https://github.com/nicklashansen/tdmpc2)、[DreamerV3](https://github.com/danijar/dreamerv3)                                                                                                                                                                                                                                                                                                                                                                                                | 潜空间动力学、imagined rollout、MPC 与策略优化                           |
+| WAM                   | [FastWAM](https://github.com/yuantianyuan01/FastWAM)                                                                                                                                                                                                                                                                                                                                                                                                                                              | 视频/世界表征与动作生成的耦合推理                                        |
+| RL / MBRL             | [Gymnasium](https://github.com/Farama-Foundation/Gymnasium)、[Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3)、[CleanRL](https://github.com/vwxyzjn/cleanrl)、[DQN Zoo](https://github.com/google-deepmind/dqn_zoo)、[d3rlpy](https://github.com/takuseno/d3rlpy)、[Implicit Q-Learning](https://github.com/ikostrikov/implicit_q_learning)、[Minari](https://github.com/Farama-Foundation/Minari)、[TD-MPC2](https://github.com/nicklashansen/tdmpc2)、[DreamerV3](https://github.com/danijar/dreamerv3) | PPO、SAC、DQN、IQL 与 MBRL 项目入口                                      |
+| RL 后训练             | [RLinf](https://github.com/RLinf/RLinf)、[AReaL](https://github.com/areal-project/AReaL)                                                                                                                                                                                                                                                                                                                                                                                                            | VLA/基础模型后训练，以及 GRPO/SAPO 实现                                 |
 
 完整论文与仓库索引见 [论文清单](docs/papers.md) 和 [代码仓与工具](docs/codebases.md)。
 
@@ -160,6 +163,7 @@ VLA、WM 和 RL/MBRL 是并行研究路线，不要求先完成其中一条才�
 │   ├── knowledge-map.md   # WM/MBRL/WAM/RL 概念关系与分类
 │   ├── robotics.md        # 运动学、动力学、控制、标定与真机闭环
 │   ├── model-basics.md     # Transformer、diffusion、flow matching 与 DiT 基础
+│   ├── reinforcement-learning.md # V/Q/A、经典 RL 算法与具身落地检查
 │   ├── papers.md          # 分级论文阅读清单
 │   ├── codebases.md       # 官方代码、仿真器、数据与基准
 │   ├── benchmarks.md      # 常用 benchmark、协议与选择建议

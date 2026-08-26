@@ -44,6 +44,7 @@ StarVLA 与 RLinf 的直接组合示例：
 | 项目              | 类型                                                               | 链接                                                                                                 |
 | ----------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
 | RLinf             | VLA/基础模型的大规模 RL 后训练                                     | [GitHub](https://github.com/RLinf/RLinf)                                                                |
+| AReaL             | 支持 GRPO、SAPO 等基础模型 RL 后训练算法                           | [GitHub](https://github.com/areal-project/AReaL) · [算法文档](https://github.com/areal-project/AReaL/blob/main/docs/zh/algorithms/grpo_series.md) |
 | CleanRL           | 单文件 RL 实现，包含 PPO/SAC/DQN 等算法                            | [GitHub](https://github.com/vwxyzjn/cleanrl) · [Docs](https://docs.cleanrl.dev/)                          |
 | Stable-Baselines3 | 易用的经典 model-free RL 基线                                      | [GitHub](https://github.com/DLR-RM/stable-baselines3) · [Docs](https://stable-baselines3.readthedocs.io/) |
 | DQN Zoo           | DQN 及其变体的参考实现                                             | [GitHub](https://github.com/google-deepmind/dqn_zoo)                                                     |

@@ -17,7 +17,14 @@
 | Impedance Control | Impedance Control | 通过虚拟刚度和阻尼调节位置误差到力/运动的关系。 |
 | Hand-eye Calibration | Hand-eye Calibration | 估计相机、末端和机器人基座之间的外参关系。 |
 | Policy | Policy | 从观测/状态到动作分布的映射 $\pi(a\mid s)$。 |
-| Value / Q | Value Function / Action-Value Function | 估计状态或状态-动作对的期望累计回报。 |
+| Return $G_t$ | Discounted Return | 从时刻 $t$ 开始的折扣累计奖励，是价值函数要估计的长期目标。 |
+| $V^\pi(s)$ | State-Value Function | 从状态 $s$ 出发并遵循策略 $\pi$ 时的期望累计回报。 |
+| $Q^\pi(s,a)$ | Action-Value Function | 在状态 $s$ 先执行动作 $a$、之后遵循策略 $\pi$ 时的期望累计回报。 |
+| $A^\pi(s,a)$ | Advantage Function | 动作相对状态基准的价值，$A^\pi(s,a)=Q^\pi(s,a)-V^\pi(s)$。 |
+| TD | Temporal-Difference Learning | 用即时奖励和下一状态价值的 bootstrap target 更新当前价值。 |
+| Bootstrap | Bootstrapping | 用已有价值估计构造新的价值监督目标，而不等待完整轨迹结束。 |
+| Replay Buffer | Experience Replay Buffer | 保存历史转移并重复采样，以复用数据并降低连续轨迹相关性。 |
+| Target Network | Target Network | 缓慢更新的网络副本，用于构造相对稳定的 Bellman target。 |
 | RL | Reinforcement Learning | 通过最大化累计回报学习策略。 |
 | Offline RL | Offline Reinforcement Learning | 只从固定数据集学习，训练时不继续与环境交互。 |
 | Online RL | Online Reinforcement Learning | 训练中用当前策略继续与环境交互并收集新数据。 |
@@ -26,6 +33,8 @@
 | Model-based RL / MBRL | Model-based Reinforcement Learning | 学习/使用动力学或奖励模型做 imagined rollout、规划、价值估计或策略优化；它是决策/RL 路线，不等于所有 WM。 |
 | On-policy | On-policy RL | 主要使用当前策略采样的数据更新当前策略，例如 PPO。 |
 | Off-policy | Off-policy RL | 可用其他/旧策略数据更新当前策略，例如 SAC。 |
+| GRPO | Group Relative Policy Optimization | 对同一输入成组采样，用组内相对奖励构造 Advantage，并以 PPO 式 clip 与 KL 正则更新策略；不训练独立 Value/Critic。 |
+| SAPO | Soft Adaptive Policy Optimization | 在 group-based 后训练中以温度控制的 sigmoid 软门控替代 hard clip，并用更高负向温度更快抑制 off-policy 的负 Advantage 更新。 |
 | BC | Behavior Cloning | 用监督学习直接拟合示范动作。 |
 | IL | Imitation Learning | 从专家示范学习行为的总称，BC 是最常见形式。 |
 | OOD | Out-of-Distribution | 超出训练数据覆盖范围的观测、动作、任务或环境。 |
