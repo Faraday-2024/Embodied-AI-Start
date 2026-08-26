@@ -35,6 +35,14 @@ flowchart TD
     D --> MBRL["MBRL：用动力学模型规划/优化"]
     D --> PLAN["规划与控制：MPC / 搜索"]
 
+    RL --> CLASSIC["经典 model-free RL"]
+    CLASSIC --> DQN["DQN<br/>离散 Q + replay"]
+    CLASSIC --> AC["DDPG / TD3 / SAC<br/>连续 Actor-Critic"]
+    CLASSIC --> OFFLINE["TD3+BC / IQL<br/>固定数据集"]
+    RL --> POST["策略后训练"]
+    POST --> PPO["PPO<br/>rollout + GAE"]
+    POST --> GROUP["GRPO / SAPO<br/>成组 rollout"]
+
     VLM --> VLA["VLA：视觉 + 语言 → 动作"]
     WM --> WAM["WAM：预测世界 + 生成动作"]
     WM --> MBRL
@@ -45,6 +53,8 @@ flowchart TD
     DEMO --> VLA
     DEMO --> WM
     SIM --> RL
+    DEMO --> OFFLINE
+    DEMO --> GROUP
 ```
 
 重要区分：
@@ -120,7 +130,7 @@ flowchart TD
 
     P --> VLA["VLA 路线<br/>OpenVLA / OpenVLA-OFT / π0.5"]
     P --> WM["WM 路线<br/>JEPA / video / 3D"]
-    P --> RL["RL / MBRL 路线<br/>PPO / SAC / TD-MPC2 / DreamerV3"]
+    P --> RL["RL / MBRL 路线<br/>DQN / PPO / SAC / IQL / GRPO / SAPO"]
     P --> WAM["WAM 路线<br/>Fast-WAM 或自定义联合模型"]
 
     VLA --> VLAE["LIBERO / CALVIN / ManiSkill<br/>闭环成功率与延迟"]

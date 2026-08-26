@@ -171,14 +171,25 @@ V、Q、A、Bellman target 以及 DQN、DDPG、TD3、TD3+BC、SAC、PPO、IQL、
 
 ```mermaid
 flowchart LR
-    S["状态 / 观测 sₜ"] --> PI["策略 π(a|s)"]
-    PI --> A["动作 aₜ"]
+    S["状态 / 观测 sₜ"] --> BETA["行为策略 βₜ<br/>探索或当前策略"]
+    BETA --> A["动作 aₜ"]
     A --> ENV["环境 / 真实机器人"]
-    ENV --> R["奖励 rₜ"]
-    ENV --> S2["下一状态 sₜ₊₁"]
-    R --> UPDATE["价值或策略更新"]
-    S2 --> UPDATE
-    UPDATE --> PI
+    ENV --> TRANS["转移 zₜ<br/>(sₜ,aₜ,rₜ,sₜ₊₁,dₜ,bₜ)"]
+    TRANS --> SOURCE{"训练数据形态"}
+    SOURCE --> REPLAY["Replay 𝓡<br/>历史转移"]
+    SOURCE --> ROLL["新鲜 rollout<br/>连续片段"]
+    SOURCE --> GROUP["成组 rollout<br/>同一条件 × G"]
+
+    REPLAY --> OFFPOL["DQN / DDPG / TD3 / SAC<br/>off-policy 更新"]
+    REPLAY --> OFFLINE["TD3+BC / IQL<br/>固定数据集约束"]
+    ROLL --> PPO["PPO<br/>GAE + clipped ratio"]
+    GROUP --> POST["GRPO / SAPO<br/>组内 Advantage"]
+
+    OFFPOL --> UPDATE["价值或策略更新"]
+    OFFLINE --> UPDATE
+    PPO --> UPDATE
+    POST --> UPDATE
+    UPDATE -. "更新参数 / 刷新策略" .-> BETA
 ```
 
 离线 RL 把“环境 / 真实机器人”换成固定数据集 $D=\{(s,a,r,s')\}$，因此不能随意尝试新动作验证价值估计；这就是分布偏移问题的根源。MBRL 则在真实环境之外学习一个近似动力学/奖励模型，用于 imagined rollout、MPC 或价值目标。一个 JEPA、视频或 3D WM 只有在提供动作条件和决策收益证据后，才应被写成 MBRL 组件。

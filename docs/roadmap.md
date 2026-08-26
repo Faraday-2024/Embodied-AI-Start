@@ -23,13 +23,13 @@
 flowchart TD
     F["第 1–2 章：共同基础"] --> V["VLA 路线：第 5 章<br/>策略闭环 + benchmark"]
     F --> W["WM 路线：第 6 章<br/>JEPA / video / 3D"]
-    F --> R["RL/MBRL 路线：第 3–4 章<br/>PPO/SAC + dynamics/MPC"]
+    F --> R["RL/MBRL 路线：第 3–4 章<br/>DQN/PPO/SAC/IQL + dynamics/MPC"]
     F --> A["WAM 路线：第 7 章<br/>未来表征 × 动作生成"]
     W -. "仅在用于决策时" .-> R
     V -. "可选 RL 后训练" .-> R
     V -. "动作与未来联合" .-> A
     W -. "未来表征接动作" .-> A
-    V --> E["第 8 章：RL 后训练与交叉项目"]
+    V --> E["第 8 章：RL 后训练与交叉项目<br/>GRPO / SAPO"]
     W --> E
     R --> E
     A --> E
