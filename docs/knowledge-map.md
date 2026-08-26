@@ -85,8 +85,6 @@ flowchart LR
 - **3D/4D 世界模型**：维护几何、对象、视角和时间演化，可用 3D Gaussian、点云、隐式场或多视图 token 表示；
 - **动作条件 WM**：把 action 作为输入并检验未来是否对动作敏感，但仍不一定包含规划器或策略优化。
 
-**MBRL 是另一条决策路线**：只要模型服务于 rollout、MPC、价值估计或 actor-critic 更新，就属于 MBRL；它可以使用 latent state dynamics，而不需要生成视频或 3D 场景。
-
 ```mermaid
 flowchart TD
     CTX["上下文：历史观测 + 指令"] --> WM["World Model"]
@@ -134,6 +132,8 @@ flowchart TD
 
 “offline、online、model-based”不能放在同一层级。正确的分类至少有两条轴。
 
+三者按不同问题判别：**WM** 关注环境表征与未来预测；**MBRL** 只有在模型被用于 rollout、规划、价值或策略更新时成立；**WAM** 关注未来世界表征与动作生成的联合或紧密耦合。它们可以重叠，但不是同义词。
+
 ```mermaid
 flowchart TD
     RL["强化学习 RL"] --> DATA["轴 A：数据交互方式"]
@@ -159,11 +159,9 @@ flowchart TD
 | **Online**            | PPO、SAC、DQN 系列                            | Dreamer 系列、MBPO、MuZero、在线 TD-MPC2   |
 | **Offline-to-Online** | IQL/CQL 初始化后继续交互，或 VLA 的 RL 后训练 | 离线预训练世界模型，再用在线数据校准并规划 |
 
-补充两点：
+补充一点：
 
 - **Decision Transformer** 使用固定轨迹并做条件序列建模，通常归入 offline RL 讨论，但它不一定使用经典 TD 学习。
-- **MBRL 不等于视频/3D 世界模型。** MBRL 关心模型是否改善决策；latent dynamics、奖励和价值预测已经足够，不要求 RGB 视频或 3D 生成。
-- **WM 接入 MBRL 的条件。** JEPA 预训练、视频预测或 3D 场景生成接入动作条件、规划或控制验证后，可作为 MBRL 组件。
 
 ## 4. RL 的学习闭环
 
@@ -192,7 +190,7 @@ flowchart LR
     UPDATE -. "更新参数 / 刷新策略" .-> BETA
 ```
 
-离线 RL 把“环境 / 真实机器人”换成固定数据集 $D=\{(s,a,r,s')\}$，因此不能随意尝试新动作验证价值估计；这就是分布偏移问题的根源。MBRL 则在真实环境之外学习一个近似动力学/奖励模型，用于 imagined rollout、MPC 或价值目标。一个 JEPA、视频或 3D WM 只有在提供动作条件和决策收益证据后，才应被写成 MBRL 组件。
+离线 RL 把“环境 / 真实机器人”换成固定数据集 $D=\{(s,a,r,s')\}$，因此不能随意尝试新动作验证价值估计；这就是分布偏移问题的根源。MBRL 的分类依据见上面的二维轴与矩阵。
 
 ## 5. VLA / WAM 的常见训练流水线
 
