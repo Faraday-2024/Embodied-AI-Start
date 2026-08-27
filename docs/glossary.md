@@ -73,6 +73,11 @@
 | Generalist Policy | Generalist Robot Policy | 试图覆盖多任务、多场景乃至多本体的通用机器人策略。 |
 | Post-training | Post-training | 在预训练模型基础上进行监督微调、偏好优化或 RL 等后续训练。 |
 | Rollout | Rollout | 策略在环境或模型中从起点执行得到的一段轨迹。 |
+| Stage | USD Stage | Isaac Sim 当前 USD 场景树，包含机器人、物体、灯光、相机和物理设置。 |
+| Prim | USD Primitive | Stage 中的一个节点，例如机器人、关节、相机或碰撞体。 |
+| Articulation | Articulation | Isaac Sim 中由关节连接的一组刚体，通常对应一个机器人。 |
+| Physics step | Physics Step | 仿真器推进一次物理积分的时间步；可与渲染和策略步不同。 |
+| Decimation | Action Decimation | 一个策略动作保持的物理步数，常写为 policy_dt / physics_dt。 |
 | Success Rate | Task Success Rate | 多次评测中满足成功判定的比例；需同时报告任务、初始条件和 seed。 |
 
 ## 容易混淆的概念

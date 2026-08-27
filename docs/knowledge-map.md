@@ -6,6 +6,22 @@
 
 机器人学把模型输出接到真实执行器：坐标系与 $SE(3)$ 定义几何关系，运动学与 Jacobian 负责可达性和速度映射，动力学与控制器负责稳定执行，标定与安全层负责 sim-to-real 和急停。详见 [机器人学基础](robotics.md)。
 
+## 0.1 仿真器与学习层
+
+仿真器负责推进物理、场景和传感器；学习算法消费它产生的 transition。选择仿真器时要同时固定物理步长、策略步长、动作保持（decimation）、资产版本和并行环境数。
+
+~~~mermaid
+flowchart LR
+    MUJOCO[MuJoCo\n轻量动力学 / 控制原型] --> TRANS[transition\n观测、动作、奖励、终止]
+    ISAAC[Isaac Sim\nUSD / PhysX / 传感器 / GPU] --> TRANS
+    TRANS --> RL[RL：PPO / SAC / DQN]
+    TRANS --> MBRL[MBRL：dynamics / rollout / MPC]
+    ISAAC --> LAB[Isaac Lab\n并行环境与机器人学习层]
+    LAB --> RL
+~~~
+
+仿真教程：[MuJoCo 仿真教程](mujoco-tutorial.md) · [Isaac Sim 仿真教程](isaac-sim-tutorial.md)。Isaac Lab 建立在 Isaac Sim 之上，适合把场景配置转换成大规模机器人学习环境；它不是另一个独立的物理引擎。
+
 ## 1. 具身学习全景
 
 ```mermaid

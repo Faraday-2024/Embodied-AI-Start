@@ -69,10 +69,11 @@ World Model 在这里是广义的环境表征、未来预测和场景生成路�
 
 | 项目         | 特点                                     | 推荐用途                           | 链接                                                                                                           |
 | ------------ | ---------------------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| MuJoCo       | 成熟、通用的接触动力学仿真               | 经典控制、算法原型                 | [GitHub](https://github.com/google-deepmind/mujoco) · [Docs](https://mujoco.readthedocs.io/)                        |
+| MuJoCo       | 成熟、通用的接触动力学仿真               | 经典控制与轻量 RL 原型             | [GitHub](https://github.com/google-deepmind/mujoco) · [Docs](https://mujoco.readthedocs.io/) · [仿真教程](mujoco-tutorial.md) |
 | Gymnasium    | 标准 RL 环境 API                         | 算法接口与小实验                   | [GitHub](https://github.com/Farama-Foundation/Gymnasium) · [Docs](https://gymnasium.farama.org/)                    |
 | ManiSkill    | GPU 并行机器人操作、数据生成与评测       | 单机仿真操作、VLA/RL 评测          | [GitHub](https://github.com/mani-skill/ManiSkill) · [Project](https://maniskill.ai/)                                |
 | Isaac Lab    | 基于 Isaac Sim 的 GPU 加速机器人学习框架 | 大规模 RL、sim-to-real、复杂传感器 | [GitHub](https://github.com/isaac-sim/IsaacLab) · [Docs](https://isaac-sim.github.io/IsaacLab/)                     |
+| Isaac Sim    | 基于 USD/PhysX 的机器人仿真平台           | 高保真传感器、复杂场景与 GPU 仿真   | [GitHub](https://github.com/isaac-sim) · [Docs](https://docs.isaacsim.omniverse.nvidia.com/) · [仿真教程](isaac-sim-tutorial.md) |
 | robosuite    | MuJoCo 机器人操作任务框架                | 操作控制器、数据生成与仿真对比     | [GitHub](https://github.com/ARISE-Initiative/robosuite) · [Docs](https://robosuite.ai/)                             |
 | LIBERO       | 语言条件、知识迁移与 lifelong 操作       | VLA 标准化评测                     | [Project](https://libero-project.github.io/main.html) · [GitHub](https://github.com/Lifelong-Robot-Learning/LIBERO) |
 | CALVIN       | 长时程语言条件操作                       | VLA 闭环与任务链评测               | [GitHub](https://github.com/mees/calvin) · [Paper](https://arxiv.org/abs/2112.03227)                                |

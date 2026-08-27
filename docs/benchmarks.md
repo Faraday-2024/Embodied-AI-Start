@@ -9,6 +9,7 @@
 | 语言条件操作与组合泛化 | [LIBERO](https://libero-project.github.io/main.html)            | [CALVIN](https://github.com/mees/calvin)                                          | task success、长时程完成率、seen/unseen 泛化                 |
 | 多任务 VLA 适配        | [LIBERO-100](https://github.com/Lifelong-Robot-Learning/LIBERO) | [Meta-World](https://github.com/Farama-Foundation/Metaworld)                      | 每任务 success、平均 success、任务间方差                     |
 | GPU 并行操作 RL        | [ManiSkill](https://github.com/haosulab/ManiSkill)              | [Isaac Lab](https://github.com/isaac-sim/IsaacLab)                                | 环境步数、样本效率、success、吞吐                            |
+| 仿真器与实验路线选择   | [MuJoCo 仿真教程](mujoco-tutorial.md)                          | [Isaac Sim 仿真教程](isaac-sim-tutorial.md)                                     | 版本、GPU、physics/policy dt、并行环境数、资产配置           |
 | 双臂与数字孪生泛化     | [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin)   | [RoboCasa](https://github.com/robocasa/robocasa)                                  | task success、跨场景/物体泛化、恢复率                        |
 | WM：JEPA / video / 3D  | [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin)   | [RoboCasa](https://github.com/robocasa/robocasa)、[ManiSkill](https://maniskill.ai/) | latent/video/geometry prediction、动作条件一致性、长时程漂移 |
 | MBRL                   | [DMControl](https://github.com/google-deepmind/dm_control)      | [ManiSkill](https://maniskill.ai/)                                                | return、环境步数、模型 rollout 误差、规划/推理成本           |

@@ -43,6 +43,8 @@ flowchart TD
 - [ModernRobotics](https://github.com/NxRLab/ModernRobotics)：教材配套实现。
 - [Pinocchio](https://github.com/stack-of-tasks/pinocchio)：刚体运动学、动力学和自动微分。
 - [MuJoCo](https://github.com/google-deepmind/mujoco)：接触动力学仿真。
+- [MuJoCo 仿真教程](mujoco-tutorial.md)：安装 MuJoCo，运行 MJCF、仿真循环并接入 Gymnasium。
+- [Isaac Sim 仿真教程](isaac-sim-tutorial.md)：安装并运行 USD 场景，读取 Articulation/传感器并了解 Isaac Lab。
 
 ## 第 2 章｜模型基础、动作策略与 benchmark
 
@@ -80,6 +82,8 @@ flowchart TD
 - [PlaNet](https://github.com/google-research/planet)：潜空间动力学与规划。
 - [DMControl](https://github.com/google-deepmind/dm_control)：连续控制与 MBRL 环境。
 - [ManiSkill](https://github.com/haosulab/ManiSkill)：GPU 并行操作环境。
+- [Isaac Sim 仿真教程](isaac-sim-tutorial.md)：理解 Isaac Sim 场景、传感器与脚本生命周期。
+- [Isaac Lab](https://github.com/isaac-sim/IsaacLab)：建立在 Isaac Sim 之上的机器人学习框架。
 
 ## 第 5 章｜从 VLM 到 VLA
 
