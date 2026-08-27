@@ -43,8 +43,8 @@ flowchart TD
 - [ModernRobotics](https://github.com/NxRLab/ModernRobotics)：教材配套实现。
 - [Pinocchio](https://github.com/stack-of-tasks/pinocchio)：刚体运动学、动力学和自动微分。
 - [MuJoCo](https://github.com/google-deepmind/mujoco)：接触动力学仿真。
-- [MuJoCo 仿真教程](mujoco-tutorial.md)：安装 MuJoCo，运行 MJCF、仿真循环并接入 Gymnasium。
-- [Isaac Sim 仿真教程](isaac-sim-tutorial.md)：安装并运行 USD 场景，读取 Articulation/传感器并了解 Isaac Lab。
+- [MuJoCo 仿真教程](mujoco-tutorial.md)：从常见的 URDF 资产入口过渡到 MJCF，运行仿真循环并接入 Gymnasium。
+- [Isaac Sim 仿真教程](isaac-sim-tutorial.md)：导入 URDF 到 USD 场景，读取 Articulation/传感器并了解 Isaac Lab。
 
 ## 第 2 章｜模型基础、动作策略与 benchmark
 

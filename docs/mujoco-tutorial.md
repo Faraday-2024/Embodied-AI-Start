@@ -1,6 +1,6 @@
 # MuJoCo 仿真教程
 
-MuJoCo 是一个轻量的刚体、接触和控制仿真引擎。本文只覆盖从安装到第一个 RL 环境所需的最小知识：MJCF 模型、仿真循环、状态与传感器、时间步和 Gymnasium 接口。
+MuJoCo 是一个轻量的刚体、接触和控制仿真引擎。机器人资产在 ROS/ROS 2 生态中常以 URDF 开始，但 MuJoCo 的原生仿真模型是 MJCF。本文只覆盖从安装到第一个 RL 环境所需的最小知识：模型、仿真循环、状态与传感器、时间步和 Gymnasium 接口。
 
 官方入口：
 
@@ -29,7 +29,20 @@ python -m pip install "gymnasium[mujoco]" stable-baselines3
 
 记录实验时固定 Python、MuJoCo、Gymnasium、操作系统、渲染后端和随机种子。
 
-## 2. 第一个 MJCF 模型
+## 2. URDF、MJCF 和 MuJoCo
+
+三者的关系可以先记成：
+
+~~~text
+URDF：机器人资产描述和 ROS 生态交换
+  -> 导入/转换后检查
+MJCF：MuJoCo 的原生模型，补充执行器、传感器、接触和仿真选项
+  -> MjModel + MjData
+~~~
+
+URDF 主要描述机器人树、关节、惯性、视觉和碰撞几何；它不是完整的仿真任务文件。导入 URDF 后，应检查关节轴、限位、惯性、网格路径、碰撞几何和单位，并确认执行器、传感器及接触参数是否需要在 MJCF 中补充。不要把 URDF 文件直接当成已经校验过的 MuJoCo 模型。
+
+## 3. 第一个 MJCF 模型
 
 MJCF 是 MuJoCo 使用的 XML 模型格式。下面的模型有一个铰链关节和一个位置执行器，保存为 model.xml：
 
@@ -60,7 +73,7 @@ MJCF 是 MuJoCo 使用的 XML 模型格式。下面的模型有一个铰链关�
 
 model.nq、model.nv 和 model.nu 分别是广义位置、广义速度和执行器的维度。它们不一定相等，不能凭经验 reshape。
 
-## 3. 最小仿真循环
+## 4. 最小仿真循环
 
 保存为 simulate.py：
 
@@ -103,7 +116,7 @@ np.savez("trajectory.npz",
 
 qpos 和 qvel 会被下一次 mj_step 原地更新，保存轨迹时必须 copy。data.ctrl 是实际施加给执行器的输入；如果中间还有控制器或限幅，也应同时记录控制器输出。
 
-## 4. 读取状态、传感器和接触
+## 5. 读取状态、传感器和接触
 
 ~~~python
 qpos = data.qpos.copy()       # 形状 [model.nq]
@@ -120,7 +133,7 @@ hinge_angle = float(data.qpos[qpos_addr])
 
 在 MJCF 的 sensor 节点中声明传感器，再从 data.sensordata 读取。接触数量可从 data.ncon 读取，具体接触对可检查 data.contact[i]。工程日志应保存传感器名称、维度、单位和时间戳。
 
-## 5. 三种时间步
+## 6. 三种时间步
 
 - physics step：引擎进行一次物理积分，长度是 physics_dt。
 - policy step：策略产生一次新动作，长度是 policy_dt。
@@ -134,7 +147,7 @@ steps_per_action = policy_dt / physics_dt
 
 例如 physics_dt 为 0.002、policy_dt 为 0.02 时，一个动作保持 10 个物理步。policy_dt 可以按任务调整，但改变它会改变控制带宽、样本数量和结果可比性。
 
-## 6. 接入 Gymnasium
+## 7. 接入 Gymnasium
 
 先用官方环境确认 Python、动作空间和 reset 流程：
 
@@ -155,7 +168,7 @@ env.close()
 
 训练前先随机运行几十步，检查观测形状、动作范围、奖励和终止标记，再开始长时间训练。连续动作通常使用 PPO、SAC 或 TD3；DQN 只适合离散动作。PPO 使用新鲜 rollout，SAC/TD3 将 transition 放入 replay buffer。
 
-## 7. 建议的自行实验
+## 8. 建议的自行实验
 
 完成最小循环后，每次只改一个变量：
 
@@ -166,7 +179,7 @@ env.close()
 
 这些实验跑通后，再自行扩展到机械臂、视觉、地图探索或更完整的 RL 任务。
 
-## 8. 常见问题
+## 9. 常见问题
 
 | 现象 | 优先检查 |
 | --- | --- |

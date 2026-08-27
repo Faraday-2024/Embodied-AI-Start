@@ -1,6 +1,6 @@
 # Isaac Sim 仿真教程
 
-Isaac Sim 是基于 Omniverse、USD 和 PhysX 的机器人仿真平台，适合复杂场景、相机/激光等传感器和 GPU 物理。Isaac Lab 建立在 Isaac Sim 之上，提供机器人学习环境和并行训练工具；两者不是同一个项目。
+Isaac Sim 是基于 Omniverse、USD 和 PhysX 的机器人仿真平台，适合复杂场景、相机/激光等传感器和 GPU 物理。机器人资产常从 URDF 进入 ROS/ROS 2 或 Isaac Sim 的导入器，但 Isaac Sim 运行时使用 USD。Isaac Lab 建立在 Isaac Sim 之上，提供机器人学习环境和并行训练工具；两者不是同一个项目。
 
 官方入口：
 
@@ -22,7 +22,20 @@ Isaac Sim 是基于 Omniverse、USD 和 PhysX 的机器人仿真平台，适合�
 
 Isaac Sim 对 NVIDIA 驱动、GPU 显存和磁盘空间要求较高。下载与系统匹配的 standalone 包，按官方文档执行安装脚本。Windows 使用对应的 .bat 或 .exe；Linux 命令不能直接照搬到 Windows。本文没有在当前环境启动 Isaac Sim，不能保证示例在所有版本上无需调整。
 
-## 2. 先认识四个对象
+## 2. URDF 导入和 USD 运行
+
+URDF 适合交换机器人本体信息：链接、关节、惯性、视觉和碰撞几何。Isaac Sim 导入 URDF 后会生成 USD Prim 和关节结构，后续场景编辑、传感器、物理和保存都围绕 USD 进行。
+
+导入后至少检查：
+
+- 根 Prim 路径、关节名称和关节顺序；
+- 长度/角度单位、质量和惯性；
+- 网格材质、碰撞几何和关节限位；
+- 驱动目标类型，以及传感器和控制器是否需要额外配置。
+
+URDF 不是完整的 USD 场景文件，也不会自动包含你的房间、灯光、相机和任务逻辑。导入成功只说明资产进入 Stage，不代表机器人已经可以直接训练。
+
+## 3. 先认识四个对象
 
 - **Stage**：当前 USD 场景树，包含机器人、物体、灯光、相机和物理设置。
 - **Prim**：Stage 中的一个 USD 节点，例如 /World/Robot 或相机。
@@ -31,7 +44,7 @@ Isaac Sim 对 NVIDIA 驱动、GPU 显存和磁盘空间要求较高。下载与�
 
 先在 GUI 中打开空场景，创建地面和光源，再加入一个机器人资产。确认 Prim 路径、关节名称、单位（通常是米和弧度）及碰撞几何。
 
-## 3. 最小 Python 生命周期
+## 4. 最小 Python 生命周期
 
 不同版本的模块路径可能变化，下面只展示结构：
 
@@ -62,7 +75,7 @@ simulation_app.close()
 
 生命周期顺序是：启动应用，创建或加载 Stage，注册机器人和传感器，reset，循环读取观测并写入动作，调用 world.step，最后关闭应用。实际导入名以当前版本 API 文档为准。
 
-## 4. 状态、动作和传感器
+## 5. 状态、动作和传感器
 
 常见关节接口的语义如下（具体函数名随版本变化）：
 
@@ -79,7 +92,7 @@ robot.set_joint_velocity_targets(qd_target)
 
 相机、深度、语义分割、激光、触觉和 IMU 都是独立传感器。记录分辨率、内外参、坐标系、频率、延迟和时间戳；图像、位姿和动作不一定在同一个 physics step 更新。
 
-## 5. 时间步和 RL transition
+## 6. 时间步和 RL transition
 
 - physics_dt：物理积分步长。
 - rendering_dt：渲染或相机更新周期。
@@ -97,7 +110,7 @@ RL 环境的一步通常记录：
 
 obs 和 next_obs 是前后观测；action 是策略输出或控制器目标；reward 是即时奖励；terminated 表示任务自然结束；truncated 表示达到时间或步数上限；info 保存成功、碰撞和奖励分项等调试信息。
 
-## 6. Isaac Lab 入门
+## 7. Isaac Lab 入门
 
 需要 PPO、SAC 或大规模并行环境时，使用与 Isaac Sim 版本匹配的 [Isaac Lab](https://isaac-sim.github.io/IsaacLab/)：
 
@@ -108,7 +121,7 @@ obs 和 next_obs 是前后观测；action 是策略输出或控制器目标；re
 
 Isaac Sim 负责 Stage、PhysX、渲染和传感器；Isaac Lab 负责机器人学习层。能在 Isaac Sim 脚本里控制机器人，不代表已经建立了 Isaac Lab RL 环境。
 
-## 7. 建议的自行实验
+## 8. 建议的自行实验
 
 每次只改一个变量：
 
@@ -119,7 +132,7 @@ Isaac Sim 负责 Stage、PhysX、渲染和传感器；Isaac Lab 负责机器人�
 
 这些实验跑通后，再自行扩展到操作任务、视觉策略、sim-to-real 或自主探索。
 
-## 8. 常见问题
+## 9. 常见问题
 
 | 现象 | 优先检查 |
 | --- | --- |
