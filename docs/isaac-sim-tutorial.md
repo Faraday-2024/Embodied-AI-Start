@@ -1,6 +1,6 @@
 # Isaac Sim 仿真教程
 
-Isaac Sim 是基于 Omniverse、USD 和 PhysX 的机器人仿真平台，适合复杂场景、相机/激光等传感器和 GPU 物理。机器人资产常从 URDF 进入 ROS/ROS 2 或 Isaac Sim 的导入器，但 Isaac Sim 运行时使用 USD。Isaac Lab 建立在 Isaac Sim 之上，提供机器人学习环境和并行训练工具；两者不是同一个项目。
+Isaac Sim 适合复杂场景、相机/激光传感器和 GPU 物理。通常先把 URDF 导入 Isaac Sim，再在 USD 场景里继续编辑、加传感器和跑物理。Isaac Lab 是建在 Isaac Sim 之上的机器人学习框架，负责并行环境和训练；它不是另一个物理引擎。
 
 官方入口：
 
@@ -9,7 +9,7 @@ Isaac Sim 是基于 Omniverse、USD 和 PhysX 的机器人仿真平台，适合�
 - [Isaac Lab 文档](https://isaac-sim.github.io/IsaacLab/)
 - [Isaac Lab GitHub](https://github.com/isaac-sim/IsaacLab)
 
-本文只讲最小仿真流程。Isaac Sim 版本、驱动和 Python API 变化较快，具体命令以对应版本文档为准。
+本文只讲最小流程：导入机器人、看懂场景对象、读写关节状态、推进仿真，再接 Isaac Lab。Isaac Sim 的版本、驱动和 Python API 变化很快，具体安装命令以你使用的版本文档为准。
 
 ## 1. 运行方式和安装
 

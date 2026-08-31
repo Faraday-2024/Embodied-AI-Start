@@ -1,10 +1,6 @@
 # Embodied AI Starter Map｜具身智能入门地图
 
-一个面向初学者的具身智能学习仓库：
-
- **VLA、World Model（WM）、Model-based RL（MBRL）、World Action Model（WAM）与强化学习（RL）。**
-
-有任何问题可以询问AI工具帮助学习
+这是一个给具身智能初学者用的学习地图，内容覆盖 VLA、World Model（WM）、Model-based RL（MBRL）、World Action Model（WAM）和强化学习（RL）。每一章都尽量回答两件事：它解决什么问题，以及怎样跑起来或验证。
 
 ## 快速入口
 
@@ -23,17 +19,17 @@
 
 ## 从哪里开始
 
-不需要一次安装所有工具，先按目标选一条最短路径：
+不用一上来把所有软件都装好。先看你想做什么，再走对应的路线：
 
 | 你的目标 | 先读/先做 | 需要的环境 |
 | --- | --- | --- |
-| 只想建立整体概念 | [知识图谱](docs/knowledge-map.md) → [学习路线](docs/roadmap.md) | Markdown 阅读环境 |
+| 只想先看懂全貌 | [知识图谱](docs/knowledge-map.md) → [学习路线](docs/roadmap.md) | 只需阅读文档 |
 | 跑经典 RL | [强化学习基础](docs/reinforcement-learning.md) → [MuJoCo 教程](docs/mujoco-tutorial.md) | Python、Gymnasium、MuJoCo |
 | 调试机器人坐标和规划 | [机器人学基础](docs/robotics.md) | Ubuntu 22.04、ROS 2 Humble、RViz 2、MoveIt 2 |
 | 做 GPU 并行仿真或 RL | [Isaac Sim 教程](docs/isaac-sim-tutorial.md) | NVIDIA 驱动、匹配版本的 Isaac Sim/Isaac Lab |
-| 研究 VLA/WM/WAM | [模型基础](docs/model-basics.md) → [论文清单](docs/papers.md) | 先读理论，再按项目 README 配置环境 |
+| 研究 VLA/WM/WAM | [模型基础](docs/model-basics.md) → [论文清单](docs/papers.md) | 先读懂方法，再按项目 README 配环境 |
 
-建议顺序是：先固定 observation/action/时间步和成功判定，再安装单个工具；不同仿真器、ROS 2 和真机的结果不能只看分数直接横向比较。
+开始实验前，先写清楚四件事：输入 observation、输出 action、时间步长、成功怎么判定。这样换仿真器或换机器人时，结果才有可比性。
 
 ## 一张图看懂主线
 

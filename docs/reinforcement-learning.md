@@ -1,8 +1,8 @@
 # 强化学习基础：从 V、Q、A 到经典算法、GRPO 与 SAPO
 
-这一页是具身智能仓库中的强化学习（RL）理论入口。重点不是背网络数量，而是用同一组问题理解不同算法：数据从哪里来，学习哪些价值量，如何构造 bootstrap target，价值信息怎样改变策略，以及算法如何控制估计误差和数据分布偏移。
+这一页是 RL 的总入口。不要先背算法名字，先对每个算法问五件事：数据从哪里来？学的是 V、Q 还是策略？目标值怎么做出来？价值信息怎样改策略？它怎样处理估计误差和数据偏移？
 
-本文覆盖 DQN、DDPG、TD3、TD3+BC、SAC、PPO、IQL、GRPO 与 SAPO。前七种算法主要用于经典控制与 offline RL；GRPO 与 SAPO 则放在语言模型和 VLA 的策略后训练语境中讨论。Model-based RL（MBRL）与世界模型的关系见[知识图谱](knowledge-map.md)，实现仓库见[代码仓与工具](codebases.md)，论文顺序见[论文清单](papers.md)。
+本文覆盖 DQN、DDPG、TD3、TD3+BC、SAC、PPO、IQL、GRPO 和 SAPO。前七个主要用于经典控制或 offline RL，GRPO/SAPO 主要放在语言模型和 VLA 的后训练里讲。想看它们和世界模型的关系，先看[知识图谱](knowledge-map.md)；想找代码，看[代码仓与工具](codebases.md)；想按顺序读论文，看[论文清单](papers.md)。
 
 ## 0. 统一阅读框架
 
