@@ -31,40 +31,8 @@
 
 ## 一张图看懂主线
 
-```mermaid
-flowchart TD
-    EAI["具身智能 Embodied AI"] --> P["感知与表征"]
-    EAI --> D["决策与控制"]
-    EAI --> DATA["数据与环境"]
+<img width="3608" height="1631" alt="未命名 3" src="https://github.com/user-attachments/assets/4a6db2d2-8384-4c24-9474-0fce9854ebdb" />
 
-    P --> VLM["VLM / 多模态表征"]
-    P --> WM["World Model：JEPA / 视频 / 3D 世界表征与生成"]
-
-    D --> RL["强化学习：从回报优化策略"]
-    D --> MBRL["MBRL：用动力学模型规划/优化"]
-    D --> PLAN["规划与控制：MPC / 搜索"]
-
-    RL --> CLASSIC["经典 model-free RL"]
-    CLASSIC --> DQN["DQN<br/>离散 Q + replay"]
-    CLASSIC --> AC["DDPG / TD3 / SAC<br/>连续 Actor-Critic"]
-    CLASSIC --> OFFLINE["TD3+BC / IQL<br/>固定数据集"]
-    RL --> POST["策略后训练"]
-    POST --> PPO["PPO<br/>rollout + GAE"]
-    POST --> GROUP["GRPO / SAPO<br/>成组 rollout"]
-
-    VLM --> VLA["VLA：视觉 + 语言 → 动作"]
-    WM --> WAM["WAM：预测世界 + 生成动作"]
-    WM --> MBRL
-    VLA --> WAM
-
-    DATA --> DEMO["离线示范 / 视频 / 轨迹"]
-    DATA --> SIM["仿真与真实机器人"]
-    DEMO --> VLA
-    DEMO --> WM
-    SIM --> RL
-    DEMO --> OFFLINE
-    DEMO --> GROUP
-```
 
 重要区分：
 
