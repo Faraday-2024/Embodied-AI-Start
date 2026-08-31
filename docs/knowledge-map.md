@@ -30,19 +30,6 @@ flowchart TD
     ROOT --> ROB["机器人学：坐标 / 运动学 / 动力学 / 控制 / 安全"]
     ROOT --> ACT["动作：关节 / 末端位姿 / 技能 / token"]
     ROOT --> OBJ["目标：任务指令 / 奖励 / 偏好"]
-
-    OBS --> REP["表征学习"]
-    REP --> VLM["视觉语言模型 VLM"]
-    REP --> WM["世界模型 WM"]
-
-    VLM --> VLA["视觉语言动作模型 VLA"]
-    WM --> WAM["世界动作模型 WAM"]
-    VLA --> WAM
-
-    ROB --> WM
-    ROB --> VLA
-    ROB --> WAM
-    ROB --> RL["强化学习 RL"]
 ```
 
 ### 核心对象
