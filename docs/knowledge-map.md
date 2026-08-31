@@ -36,7 +36,7 @@ flowchart TD
     OBJ --> RL
     RL --> MBRL["Model-based RL：模型辅助决策"] & VLA & WAM
     SUP --> VLA
-    ROB --> VLA & WM & WAM & RL
+    ROB --> WM & VLA & WAM & RL
 ```
 
 ### 核心对象
