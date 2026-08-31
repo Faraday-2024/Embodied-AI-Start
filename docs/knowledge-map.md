@@ -42,7 +42,6 @@ flowchart TD
     ROB --> WM
     ROB --> VLA
     ROB --> WAM
-    ROB --> RL["强化学习 RL"]
 ```
 
 ### 核心对象
