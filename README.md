@@ -9,6 +9,7 @@
 | 先建立全局概念                           | [知识图谱](docs/knowledge-map.md)                                                           |
 | 补齐机器人学基础                         | [机器人学知识](docs/robotics.md)                                                            |
 | 学 MuJoCo 和 Isaac Sim 仿真              | [MuJoCo 仿真教程](docs/mujoco-tutorial.md) · [Isaac Sim 仿真教程](docs/isaac-sim-tutorial.md) |
+| 用 XPolicyLab 连接 RoboDojo               | [XPolicyLab 教程](docs/xpolicylab-tutorial.md)                                             |
 | 学 Transformer、Diffusion、Flow Matching | [模型基础](docs/model-basics.md)                                                            |
 | 学 V、Q、A、经典 RL、GRPO 与 SAPO        | [强化学习基础](docs/reinforcement-learning.md)                                              |
 | 按顺序读论文                             | [论文清单](docs/papers.md)                                                                  |
@@ -184,6 +185,7 @@ VLA、WM 和 RL/MBRL 是并行研究路线，不要求先完成其中一条才�
 │   ├── robotics.md        # 运动学、动力学、控制、标定与真机闭环
 │   ├── mujoco-tutorial.md # URDF/MJCF、MuJoCo 仿真循环与 Gymnasium 接入
 │   ├── isaac-sim-tutorial.md # URDF 导入、USD、传感器、无头运行与 Isaac Lab
+│   ├── xpolicylab-tutorial.md # XPolicyLab 与 RoboDojo 的策略适配、debug 和部署
 │   ├── model-basics.md     # Transformer、diffusion、flow matching 与 DiT 基础
 │   ├── reinforcement-learning.md # V/Q/A、经典 RL 算法与具身落地检查
 │   ├── papers.md          # 分级论文阅读清单
