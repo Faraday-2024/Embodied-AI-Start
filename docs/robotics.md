@@ -84,6 +84,21 @@ ros2 run tf2_ros tf2_echo base_link tool0
 
 ### 3.3 Python 查询示例
 
+#### rclpy 是什么
+
+`rclpy` 是 ROS 2 的 Python 客户端库。它把 Python 程序接入 ROS 2 的通信和执行系统：
+
+| 对象 | 作用 |
+| --- | --- |
+| `rclpy.init()` / `rclpy.shutdown()` | 初始化和释放 ROS 2 Python 运行时；每个进程通常各调用一次 |
+| `Node` | ROS 2 节点基类，承载日志、参数、发布者、订阅者、服务、动作和定时器 |
+| `create_timer(period, callback)` | 注册按周期触发的回调；回调不应长时间阻塞 |
+| `rclpy.spin(node)` | 把节点交给 executor，持续处理订阅、定时器、服务和 action 回调 |
+| `rclpy.time.Time()` | 表示时间查询请求；在 tf2 中传入零时间通常表示查询最新可用变换 |
+| `Duration` | 表示超时时长或时间间隔，例如 TF 查询最多等待 0.2 秒 |
+
+`rclpy` 只负责 ROS 2 Python 节点的生命周期和回调调度；坐标变换缓存与查询由 `tf2_ros.Buffer` 负责，监听器 `TransformListener` 负责接收 TF 消息。因此下面的程序是“定时器触发查询”，不是主动轮询网络。
+
 下面示例展示 tf2 的典型异步查询结构，具体消息类型和节点初始化按你的包调整：
 
 ~~~python
