@@ -43,10 +43,6 @@ flowchart TD
     ROB --> VLA
     ROB --> WAM
     ROB --> RL["强化学习 RL"]
-
-    ACT --> SUP["动作监督 / 示范数据"]
-    OBJ --> RL
-    RL --> MBRL["Model-based RL：模型辅助决策"]
 ```
 
 ### 核心对象
