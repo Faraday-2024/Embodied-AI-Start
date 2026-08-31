@@ -34,6 +34,10 @@ flowchart TD
     OBS --> REP["表征学习"]
     REP --> VLM["视觉语言模型 VLM"]
     REP --> WM["世界模型 WM"]
+
+    VLM --> VLA["视觉语言动作模型 VLA"]
+    WM --> WAM["世界动作模型 WAM"]
+    VLA --> WAM
 ```
 
 ### 核心对象
