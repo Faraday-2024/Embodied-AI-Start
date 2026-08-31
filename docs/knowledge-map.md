@@ -26,31 +26,17 @@ TRANS --> MBRL[MBRL：动力学 / 展望 / MPC]
 
 ```mermaid
 flowchart TD
-    ROOT["具身智能"] --> OBS["观测：图像 / 状态 / 触觉 / 语言"]
-    ROOT --> ROB["机器人学：坐标 / 运动学 / 动力学 / 控制 / 安全"]
-    ROOT --> ACT["动作：关节 / 末端位姿 / 技能 / token"]
-    ROOT --> OBJ["目标：任务指令 / 奖励 / 偏好"]
-
+    ROOT["具身智能"] --> OBS["观测：图像 / 状态 / 触觉 / 语言"] & ROB["机器人学：坐标 / 运动学 / 动力学 / 控制 / 安全"] & ACT["动作：关节 / 末端位姿 / 技能 / token"] & OBJ["目标：任务指令 / 奖励 / 偏好"]
     OBS --> REP["表征学习"]
-    REP --> VLM["视觉语言模型 VLM"]
-    REP --> WM["世界模型 WM"]
-
+    REP --> VLM["视觉语言模型 VLM"] & WM["世界模型 WM"]
     VLM --> VLA["视觉语言动作模型 VLA"]
     WM --> WAM["世界动作模型 WAM"]
     VLA --> WAM
-
+    ACT --> SUP["动作监督 / 示范数据"] & RL["强化学习 RL"]
     OBJ --> RL
-    ACT --> RL["强化学习 RL"]
-    ACT --> SUP["动作监督 / 示范数据"]
-    RL --> MBRL["Model-based RL：模型辅助决策"]
-
+    RL --> MBRL["Model-based RL：模型辅助决策"] & VLA & WAM
     SUP --> VLA
-    RL --> VLA
-    RL --> WAM
-    ROB --> WM
-    ROB --> VLA
-    ROB --> WAM
-    ROB --> RL
+    ROB --> VLA & WM & WAM & RL
 ```
 
 ### 核心对象
