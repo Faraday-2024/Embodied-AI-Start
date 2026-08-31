@@ -39,7 +39,175 @@ $$
 
 坐标系错误通常表现为“策略看起来有反应，但方向、旋转或抓取位置系统性错误”，不能只靠重新训练解决。
 
-## 3. 运动学与可执行性
+## 3. TF/tf2：让坐标系随时间可查询
+
+### 3.1 理论
+
+ROS 2 中的 TF（Transform）不是一张静态图片，而是一棵带时间戳的坐标树。每个发布者提供父坐标系到子坐标系的变换，tf2 再沿树查询任意两帧之间的变换。常见链路是：
+
+~~~text
+world/map -> odom -> base_link
+                         -> camera_link -> camera_optical_frame
+                         -> shoulder -> ... -> tool0
+~~~
+
+- `world`/`map`：全局地图或任务参考系；
+- `odom`：连续但会漂移的里程计系；
+- `base_link`：机器人本体基座；
+- `camera_optical_frame`：相机光学坐标系，轴方向遵循相机约定；
+- `tool0`/`ee_link`：末端工具或执行器参考系。
+
+若已知 $T^A_B$ 和 $T^B_C$，则
+
+$$
+T^A_C=T^A_B T^B_C,\qquad
+T^B_A=(T^A_B)^{-1}.
+$$
+
+tf2 查询的是**带时间的变换**。请求时刻 $t$ 的变换只能由缓存中相邻时间戳插值或外推得到；时间戳过旧、未来时间或树中断都会导致 extrapolation / lookup 错误。因此，传感器消息、机器人状态和动作都应携带时间戳，不能只依赖“当前最新位姿”。
+
+静态关系（例如 `base_link -> camera_link` 的安装外参）应作为 static transform 发布；动态关系（例如 `odom -> base_link`、关节链）应由里程计、定位或 robot_state_publisher 发布。TF 树必须保持单父节点，不能同时让两个节点发布同一条动态边。
+
+### 3.2 命令行实践
+
+先确认 ROS 2 环境和节点：
+
+~~~bash
+ros2 topic list | findstr tf
+ros2 topic echo /tf --once
+ros2 topic echo /tf_static --once
+ros2 run tf2_tools view_frames
+ros2 run tf2_ros tf2_echo base_link tool0
+~~~
+
+Linux 使用 `grep` 替换 `findstr`。`view_frames` 生成的报告用于检查断链、重复发布者、更新频率和缓存延迟；`tf2_echo A B` 的方向是“查询 B 在 A 中的位姿”，不要只看数值而忘记确认查询方向。
+
+### 3.3 Python 查询示例
+
+下面示例展示 tf2 的典型异步查询结构，具体消息类型和节点初始化按你的包调整：
+
+~~~python
+import rclpy
+from rclpy.duration import Duration
+from rclpy.node import Node
+from tf2_ros import Buffer, TransformListener
+
+class TfProbe(Node):
+    def __init__(self):
+        super().__init__("tf_probe")
+        self.buffer = Buffer()
+        self.listener = TransformListener(self.buffer, self)
+        self.timer = self.create_timer(0.1, self.tick)
+
+    def tick(self):
+        try:
+            tf = self.buffer.lookup_transform(
+                "base_link", "tool0", rclpy.time.Time(),
+                timeout=Duration(seconds=0.2),
+            )
+            p = tf.transform.translation
+            self.get_logger().info(f"tool0: {p.x:.3f}, {p.y:.3f}, {p.z:.3f}")
+        except Exception as exc:
+            self.get_logger().warn(f"TF lookup failed: {exc}")
+
+rclpy.init()
+rclpy.spin(TfProbe())
+rclpy.shutdown()
+~~~
+
+实践排查顺序：先确认帧名拼写，再确认树是否连通，再确认时间戳是否落在 buffer 范围内，最后才检查外参数值。相机数据进入策略前，通常要把点或位姿从 `camera_optical_frame` 变换到 `base_link` 或 `world`，并记录使用的查询时刻。
+
+## 4. MoveIt 2：从目标位姿到可执行轨迹
+
+### 4.1 理论结构
+
+MoveIt 2 不是单一 IK 函数，而是一条规划与执行管线：
+
+~~~text
+目标位姿/关节目标
+    -> TF + 当前关节状态
+    -> IK / 约束检查
+    -> Planning Scene（机器人 + 障碍物）
+    -> 采样式或优化式规划器
+    -> 时间参数化与速度/加速度约束
+    -> ros2_control 控制器
+    -> 轨迹执行与反馈
+~~~
+
+核心输入是当前状态、目标状态、机器人模型和碰撞世界；核心输出不是“瞬时动作”，而是一条带时间的 `JointTrajectory`。规划成功不等于执行成功：控制器可能拒绝轨迹、通信可能超时，或真实碰撞模型与规划场景不一致。
+
+URDF 描述机器人链接、关节、惯性、视觉和碰撞几何；SRDF 描述 MoveIt 语义信息，例如 planning group、末端执行器、禁碰对和默认姿态。两者缺一不可：URDF 能被加载不代表 MoveIt 已经知道“哪组关节是机械臂”和“哪个 link 是末端”。
+
+### 4.2 配置与最小启动
+
+用 MoveIt Setup Assistant 基于 URDF 生成配置包后，至少检查：
+
+- planning group 是否包含正确的关节和末端 link；
+- kinematics.yaml 的 IK 插件和求解参数；
+- joint_limits.yaml 的速度、加速度和 jerk 限制；
+- planning pipelines（OMPL、Pilz 或其他规划器）及其参数；
+- controllers.yaml 中的轨迹控制器名称、关节顺序和 action 接口；
+- SRDF 的禁碰对是否只屏蔽了确实不会碰撞的 link。
+
+先启动仿真或真机驱动，再启动 `move_group` 和 RViz：
+
+~~~bash
+ros2 launch <your_moveit_config> demo.launch.py
+ros2 topic list
+ros2 control list_controllers
+ros2 action list | findstr trajectory
+~~~
+
+不同配置包的 launch 文件名可能是 `demo.launch.py`、`move_group.launch.py` 或自定义名称；以该包 README 为准。RViz 中应同时看到机器人当前状态、规划场景和目标位姿，否则先不要调规划器参数。
+
+### 4.3 Python 规划实践
+
+MoveIt 2 的 Python 接口在不同发行版和封装包之间变化较大，下面给出调用逻辑而不是保证即拷即用的导入路径：
+
+~~~python
+# 伪代码：使用你发行版对应的 MoveIt 2 Python API
+move_group = MoveGroupInterface("arm")
+move_group.set_pose_reference_frame("base_link")
+move_group.set_end_effector_link("tool0")
+move_group.set_pose_target(target_pose)
+
+plan = move_group.plan()
+if not plan.success:
+    raise RuntimeError("planning failed")
+
+move_group.execute(plan.trajectory, wait=True)
+move_group.clear_pose_targets()
+~~~
+
+目标位姿必须明确参考坐标系、末端 link 和四元数是否归一化。工程中还要设置 planning time、规划尝试次数、速度/加速度缩放，并在执行前检查轨迹的关节限位和碰撞距离。对于视觉伺服或 VLA 的 delta pose，不要每一帧都无条件调用全局规划；通常先把目标变换到 planning frame，再用局部笛卡尔段、伺服控制或低层控制器执行。
+
+### 4.4 Planning Scene 与碰撞
+
+Planning Scene 是 MoveIt 的碰撞世界和机器人状态快照，至少包括：机器人当前关节状态、静态碰撞物、动态物体、附着物体和允许碰撞矩阵（ACM）。抓取物体后，应把物体从世界碰撞集合移到机器人附着集合；否则规划器会把“夹在手里的物体”当成障碍物，导致后续轨迹失败。
+
+实践检查：
+
+1. 先只加载机器人，确认自碰撞检查不会误报；
+2. 加入一个盒子，确认盒子在 RViz 和规划场景中位置一致；
+3. 让末端接近盒子，检查碰撞距离和轨迹是否被拒绝；
+4. 附着盒子后重新规划，确认允许碰撞对和末端姿态符合任务；
+5. 记录 planning frame、障碍物版本、场景更新时间和执行结果。
+
+### 4.5 与 VLA/RL 的边界
+
+MoveIt 2 更适合做约束规划、轨迹生成和安全执行层；VLA/RL 更适合产生目标位姿、技能或动作分布。常见接口是：
+
+~~~text
+策略输出 task-space goal / delta pose
+    -> TF 统一坐标系
+    -> MoveIt 2 做 IK、碰撞检查和轨迹规划
+    -> ros2_control 执行
+    -> 反馈 joint state、TF、力觉和执行结果
+~~~
+
+不要把 MoveIt 的规划成功率直接当成策略成功率。评测至少分开记录：目标是否可达、规划是否成功、控制器是否接受、执行是否完成、是否发生碰撞和总延迟。
+
+## 5. 运动学与可执行性
 
 给定关节配置 $q$，正运动学得到末端位姿 $x=f(q)$。逆运动学寻找满足
 
@@ -55,7 +223,7 @@ $$
 
 部署前至少检查：目标是否可达、IK 是否有连续解、动作 chunk 是否跨越奇异位形、夹爪开合是否与任务阶段同步。VLA 输出 task-space chunk 时，IK、插值和限位过滤应放在策略之外。
 
-## 4. 动力学、轨迹与控制
+## 6. 动力学、轨迹与控制
 
 常见控制层次如下：
 
@@ -76,7 +244,7 @@ flowchart LR
 
 
 
-## 5. 感知、标定与 sim-to-real
+## 7. 感知、标定与 sim-to-real
 
 真机部署前至少完成：
 
@@ -88,7 +256,7 @@ flowchart LR
 
 对 sim-to-real 实验，单独记录 domain randomization 改变了什么，以及哪些误差由真实硬件引入。
 
-## 6. 与当前仓库主线的衔接
+## 8. 与当前仓库主线的衔接
 
 | 研究路线 | 机器人学接口 | 首先验证什么 |
 | --- | --- | --- |

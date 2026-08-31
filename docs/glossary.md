@@ -78,6 +78,11 @@
 | Articulation | Articulation | Isaac Sim 中由关节连接的一组刚体，通常对应一个机器人。 |
 | Physics step | Physics Step | 仿真器推进一次物理积分的时间步；可与渲染和策略步不同。 |
 | Decimation | Action Decimation | 一个策略动作保持的物理步数，常写为 policy_dt / physics_dt。 |
+| TF / tf2 | Transform Library | ROS 2 中带时间戳的坐标变换树与查询库；用于在 frame 之间转换位姿、点和向量。 |
+| Planning Frame | Planning Frame | MoveIt 2 规划所使用的参考坐标系，目标位姿必须明确表达在哪个 frame 中。 |
+| Planning Scene | Planning Scene | MoveIt 2 保存机器人状态、障碍物、附着物体和碰撞规则的场景快照。 |
+| SRDF | Semantic Robot Description Format | 在 URDF 之上描述 MoveIt 语义信息的文件格式，例如 planning group、末端执行器和禁碰对。 |
+| ros2_control | ROS 2 Control | ROS 2 的硬件接口与控制器框架，MoveIt 2 通常通过轨迹控制器执行规划结果。 |
 | Success Rate | Task Success Rate | 多次评测中满足成功判定的比例；需同时报告任务、初始条件和 seed。 |
 
 ## 容易混淆的概念

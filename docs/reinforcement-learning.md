@@ -236,13 +236,13 @@ $$
 
 ### 5.1 DQN：离散动作的 value-based RL
 
-DQN 的训练数据来自智能体与环境的交互，而不是预先存在的 $Q$ 值标签。令 $\mathcal A$ 表示有限离散动作集合，$|\mathcal A|$ 表示动作数，$\beta_t(a\mid s)$ 表示第 $t$ 步实际收集数据的**行为策略**。常用的 $\epsilon_{\mathrm g}$-greedy 行为策略为
+DQN 的训练数据来自智能体与环境的交互，而不是预先存在的 $Q$ 值标签。令 $\mathcal A$ 表示有限离散动作集合，$|\mathcal A|$ 表示动作数，$\beta_t(a\mid s)$ 表示第 $t$ 步实际收集数据的**行为策略**。先固定一个确定性的并列决策规则 $a_{\mathrm g}(s)$：对 $\operatorname*{arg\,max}_{a\in\mathcal A}Q_{\theta_t}(s,a)$ 出现并列时，按预先约定的顺序选一个动作。常用的 $\epsilon_{\mathrm g}$-greedy 行为策略为
 
 $$
 \beta_t(a\mid s)=
 \frac{\epsilon_{\mathrm g}}{|\mathcal A|}
 +(1-\epsilon_{\mathrm g})
-\mathbf 1\!\left[a=\operatorname*{arg\,max}_{a'\in\mathcal A}Q_{\theta_t}(s,a')\right],
+\mathbf 1\!\left[a=a_{\mathrm g}(s)\right],
 $$
 
 其中 $\epsilon_{\mathrm g}\in[0,1]$ 是随机探索概率，$\theta_t$ 是采样时在线 $Q$ 网络的参数，$\mathbf 1[\cdot]$ 是条件成立时取 1、否则取 0 的指示函数。智能体从 $a_t\sim\beta_t(\cdot\mid s_t)$ 取动作并执行，环境返回 $r_t$、$s_{t+1}$、$d_t$ 和 $b_t$，随后把转移 $z_t=(s_t,a_t,r_t,s_{t+1},d_t,b_t)$ 写入 replay buffer $\mathcal R$。训练数据就是从 $\mathcal R$ 中随机抽出的历史转移；buffer 初期可以先用随机策略或高探索率的 $\epsilon_{\mathrm g}$-greedy 策略填充。
@@ -334,11 +334,13 @@ $$
 直接在固定数据上运行 TD3 时，Actor 可能利用 Critic 在数据外动作上的错误高值。TD3+BC 在 Actor 目标中加入行为克隆约束：
 
 $$
-L_{actor}=-\lambda\,\mathbb{E}[Q(s_t,\pi(s_t))]
-+\mathbb{E}[\|\pi(s_t)-a_{t,\mathcal D}\|^2].
+L_{\mathrm{actor}}=-\lambda_Q\,\mathbb{E}[Q_\theta(s_t,\pi_\phi(s_t))]
++\mathbb{E}[\|\pi_\phi(s_t)-a_{t,\mathcal D}\|^2],
+\qquad
+\lambda_Q=\frac{\alpha}{\mathbb{E}[|Q_\theta(s_t,a_{t,\mathcal D})|]+\varepsilon_Q}.
 $$
 
-其中 $a_{t,\mathcal D}$ 是离线数据在 $s_t$ 上记录的动作，$\lambda>0$ 控制价值最大化项的权重。价值项推动策略选择更优动作，BC 项限制策略远离数据支持区域。实现中还需检查 $Q$ 尺度归一化和动作归一化，否则两项的相对权重会失真。
+其中 $a_{t,\mathcal D}$ 是离线数据在 $s_t$ 上记录的动作，$\alpha>0$ 是价值项的基础权重，$\varepsilon_Q>0$ 防止归一化分母为零，$\lambda_Q$ 是实际乘在 Q 项上的权重；$\pi_\phi$ 和 $Q_\theta$ 分别表示当前 Actor 与 Critic。不同实现也会直接固定 $\lambda_Q$，但必须明确是否做 Q 尺度归一化，否则两项的相对权重不可比。
 
 #### 算法流程
 
@@ -418,7 +420,7 @@ $$
 clipped objective 为
 
 $$
-L^{CLIP}=\mathbb{E}\left[
+J^{CLIP}(\theta)=\mathbb{E}\left[
 \min\left(\rho_t\hat A_t,
 \operatorname{clip}(\rho_t,1-\epsilon_{\mathrm{clip}},1+\epsilon_{\mathrm{clip}})\hat A_t\right)
 \right].
@@ -467,10 +469,10 @@ $$
 
 $$
 L_\pi=-\mathbb{E}
-[\operatorname{clip}(\exp(\beta A_t),w_{\max})\log\pi_\phi(a_t\mid s_t)].
+[\min(\exp(\beta A_t),w_{\max})\log\pi_\phi(a_t\mid s_t)].
 $$
 
-其中 $\tau\in(0,1)$ 是 expectile 水平，$\beta>0$ 控制 Advantage 权重的尖锐程度，$w_{\max}$ 是防止权重爆炸的上限。
+其中 $\tau\in(0,1)$ 是 expectile 水平，$\beta>0$ 控制 Advantage 权重的尖锐程度，$w_{\max}>0$ 是防止权重爆炸的上限；这里用 $\min(\cdot,w_{\max})$ 表示只设置上界。
 
 IQL 的关键不是对数据外动作显式“取保守最小值”，而是避免在 Bellman backup 中查询当前策略产生的 OOD 动作，并在策略改进时只重加权数据动作。
 

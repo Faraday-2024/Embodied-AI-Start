@@ -68,7 +68,9 @@ Mask 是信息流约束，不是训练目标本身。使用 Transformer 不代�
 
 1. **Next-token / action-token head**：对每个位置输出词表或动作码本 logits，形状通常为 `[B, L, V]`，用交叉熵训练：
 
-   $$\mathcal{L}_{AR}=-\sum_i\log p_\theta(y_i\mid y_{<i},C).$$
+   $$
+   \mathcal{L}_{AR}=-\sum_i\log p_\theta(y_i\mid y_{<i},C).
+   $$
 
    连续动作先量化为离散 bin/token；推理时自回归采样或贪心解码。
 2. **连续回归 head**：输出 `[B, H, A]` 或 `[B, A]`，用 L1、L2、Huber 或高斯负对数似然拟合动作。简单但在多峰行为上可能产生平均动作。
