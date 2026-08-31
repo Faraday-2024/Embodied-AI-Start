@@ -39,9 +39,14 @@ flowchart TD
     WM --> WAM["世界动作模型 WAM"]
     VLA --> WAM
 
-    ROB --> WM
-    ROB --> VLA
-    ROB --> WAM
+    ACT --> SUP["动作监督 / 示范数据"]
+    ACT --> RL["强化学习 RL"]
+    OBJ --> RL
+    RL --> MBRL["Model-based RL：模型辅助决策"]
+
+    SUP --> VLA
+    RL --> VLA
+    RL --> WAM
 ```
 
 ### 核心对象
