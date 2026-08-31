@@ -38,6 +38,11 @@ flowchart TD
     VLM --> VLA["视觉语言动作模型 VLA"]
     WM --> WAM["世界动作模型 WAM"]
     VLA --> WAM
+
+    ROB --> WM
+    ROB --> VLA
+    ROB --> WAM
+    ROB --> RL["强化学习 RL"]
 ```
 
 ### 核心对象
