@@ -29,14 +29,14 @@ flowchart TD
     ROOT["具身智能"] --> OBS["观测：图像 / 状态 / 触觉 / 语言"] & ROB["机器人学：坐标 / 运动学 / 动力学 / 控制 / 安全"] & ACT["动作：关节 / 末端位姿 / 技能 / token"] & OBJ["目标：任务指令 / 奖励 / 偏好"]
     OBS --> REP["表征学习"]
     REP --> VLM["视觉语言模型 VLM"] & WM["世界模型 WM"]
-    VLM --> VLA["视觉语言动作模型 VLA"]
-    WM --> WAM["世界动作模型 WAM"]
-    VLA --> WAM
-    ACT --> RL["强化学习 RL"] & SUP["动作监督 / 示范数据"]
+    ROB --> RL["强化学习 RL"] & WM & VLA["视觉语言动作模型 VLA"] & WAM["世界动作模型 WAM"]
+    ACT --> RL & SUP["动作监督 / 示范数据"]
     OBJ --> RL
-    RL --> MBRL["Model-based RL：模型辅助决策"] & VLA & WAM
+    RL --> WAM & VLA & MBRL["Model-based RL：模型辅助决策"]
+    VLM --> VLA
+    WM --> WAM
     SUP --> VLA
-    ROB --> WM & VLA & WAM & RL
+    VLA --> WAM
 ```
 
 ### 核心对象
