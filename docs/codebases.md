@@ -87,6 +87,7 @@ World Model 在这里是广义的环境表征、未来预测和场景生成路�
 | LIBERO       | 语言条件、知识迁移与 lifelong 操作       | VLA 标准化评测                     | [Project](https://libero-project.github.io/main.html) · [GitHub](https://github.com/Lifelong-Robot-Learning/LIBERO) |
 | CALVIN       | 长时程语言条件操作                       | VLA 闭环与任务链评测               | [GitHub](https://github.com/mees/calvin) · [Paper](https://arxiv.org/abs/2112.03227)                                |
 | Meta-World   | 多任务机械臂操作                         | 多任务/组合泛化与 RL success rate  | [Project](https://meta-world.github.io/) · [GitHub](https://github.com/Farama-Foundation/Metaworld)                 |
+| RoboDojo     | 统一仿真与真实世界的通用机器人操作评测   | sim-to-real、泛化、记忆、精细操作和长时程评测 | [Website](https://robodojo-benchmark.com/) · [GitHub](https://github.com/robodojo-benchmark/RoboDojo) · [Docs](https://robodojo-benchmark.com/doc) |
 | RoboTwin 2.0 | 数字孪生数据生成与双臂操作任务           | 操作泛化与大规模数据               | [GitHub](https://github.com/RoboTwin-Platform/RoboTwin)                                                           |
 | RoboCasa     | 家庭厨房与长时程操作                     | WM/WAM、VLA 与 RL 的复杂接触任务   | [GitHub](https://github.com/robocasa/robocasa)                                                                    |
 | DMControl    | 连续控制任务套件                         | MBRL 原型、动力学和规划对比        | [GitHub](https://github.com/google-deepmind/dm_control)                                                           |

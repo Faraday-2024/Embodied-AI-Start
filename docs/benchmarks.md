@@ -10,6 +10,7 @@ Benchmark 不是一张总排行榜，而是一套固定的任务、数据和成�
 | 多任务 VLA 适配        | [LIBERO-100](https://github.com/Lifelong-Robot-Learning/LIBERO) | [Meta-World](https://github.com/Farama-Foundation/Metaworld)                      | 每任务 success、平均 success、任务间方差                     |
 | GPU 并行操作 RL        | [ManiSkill](https://github.com/haosulab/ManiSkill)              | [Isaac Lab](https://github.com/isaac-sim/IsaacLab)                                | 环境步数、样本效率、success、吞吐                            |
 | 仿真器与实验路线选择   | [MuJoCo 仿真教程](mujoco-tutorial.md)                          | [Isaac Sim 仿真教程](isaac-sim-tutorial.md)                                     | 版本、GPU、physics/policy dt、并行环境数、资产配置           |
+| 通用机器人操作综合评测 | [RoboDojo](https://robodojo-benchmark.com/)                     | [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin)、[RoboCasa](https://github.com/robocasa/robocasa) | sim/real 一致评测、泛化、记忆、精细操作、长时程与开放词汇指令 |
 | 双臂与数字孪生泛化     | [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin)   | [RoboCasa](https://github.com/robocasa/robocasa)                                  | task success、跨场景/物体泛化、恢复率                        |
 | WM：JEPA / video / 3D  | [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin)   | [RoboCasa](https://github.com/robocasa/robocasa)、[ManiSkill](https://maniskill.ai/) | latent/video/geometry prediction、动作条件一致性、长时程漂移 |
 | MBRL                   | [DMControl](https://github.com/google-deepmind/dm_control)      | [ManiSkill](https://maniskill.ai/)                                                | return、环境步数、模型 rollout 误差、规划/推理成本           |
@@ -27,6 +28,7 @@ Benchmark 不是一张总排行榜，而是一套固定的任务、数据和成�
 | [CALVIN](https://github.com/mees/calvin)                                              | 语言条件长时程连续操作              | ABC/XYZ split、chain 长度、每步与整链 success                 |
 | [ManiSkill](https://github.com/haosulab/ManiSkill)                                    | GPU 并行操作、数据生成、sim-to-real | 版本、任务 ID、并行环境数、控制频率                           |
 | [Meta-World](https://github.com/Farama-Foundation/Metaworld)                          | 经典多任务机械臂操作                | MT10/MT50/单任务、train/test task split                       |
+| [RoboDojo](https://robodojo-benchmark.com/)                                           | 统一的仿真与真实世界通用机器人操作评测（42 个仿真任务、18 个真实任务） | sim/real split、任务子集、Isaac Sim 版本、XPolicyLab 接口、真实硬件、scene reset、评测次数 |
 | [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin)                         | 双臂数字孪生任务与数据              | 场景、物体组合、双臂 action interface                         |
 | [RoboCasa](https://github.com/robocasa/robocasa)                                      | 家庭厨房与长时程操作                | task suite、场景随机化、接触与终止条件                        |
 | [Isaac Lab](https://github.com/isaac-sim/IsaacLab)                                    | GPU 仿真与大规模 RL                 | Isaac Sim 版本、GPU、并行度、sim-to-real 设置                 |

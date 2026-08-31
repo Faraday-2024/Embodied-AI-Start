@@ -132,6 +132,7 @@ WAM 关注的是“未来世界表征”和“机器人动作”是否在同一�
 | CALVIN: A Benchmark for Language-Conditioned Policy Learning for Long-Horizon Robot Manipulation Tasks | 语言条件长时程闭环与任务链 | [arXiv](https://arxiv.org/abs/2112.03227) · [Code](https://github.com/mees/calvin) |
 | ManiSkill2 | 大规模操作任务、数据生成与仿真评测 | [arXiv](https://arxiv.org/abs/2302.04659) · [Code](https://github.com/haosulab/ManiSkill) |
 | Meta-World: A Benchmark and Evaluation for Multi-Task and Meta Reinforcement Learning | 多任务操作与组合泛化 | [Project](https://meta-world.github.io/) · [Code](https://github.com/Farama-Foundation/Metaworld) |
+| RoboDojo: A Unified Sim-and-Real Benchmark for Comprehensive Evaluation of Generalist Robot Manipulation Policies（2026，预印本） | 统一仿真与真实世界的通用机器人操作评测；覆盖 42 个仿真任务和 18 个真实任务，关注泛化、记忆、精细操作、长时程执行与开放词汇指令 | [arXiv](https://arxiv.org/abs/2607.04434) · [Website](https://robodojo-benchmark.com/) · [Code](https://github.com/robodojo-benchmark/RoboDojo) |
 | RoboTwin 2.0 | 双臂数字孪生、数据生成与跨场景泛化 | [Code](https://github.com/RoboTwin-Platform/RoboTwin) |
 | RoboCasa | 家庭厨房中的长时程操作与接触任务 | [Code](https://github.com/robocasa/robocasa) |
 | Open X-Embodiment | 跨机器人数据规模化与跨本体迁移 | [arXiv](https://arxiv.org/abs/2310.08864) · [Project](https://robotics-transformer-x.github.io/) |
