@@ -24,34 +24,8 @@ flowchart LR
 
 ## 1. 具身学习全景
 
-```mermaid
-flowchart TD
-    ROOT["具身智能"] --> OBS["观测：图像 / 状态 / 触觉 / 语言"]
-    ROOT --> ROB["机器人学：坐标 / 运动学 / 动力学 / 控制 / 安全"]
-    ROOT --> ACT["动作：关节 / 末端位姿 / 技能 / token"]
-    ROOT --> OBJ["目标：任务指令 / 奖励 / 偏好"]
+<img width="2361" height="1635" alt="未命名 2" src="https://github.com/user-attachments/assets/b42525a7-8d4f-4d6b-a063-dcf2f9a65831" />
 
-    OBS --> REP["表征学习"]
-    REP --> VLM["视觉语言模型 VLM"]
-    REP --> WM["世界模型 WM"]
-
-    VLM --> VLA["视觉语言动作模型 VLA"]
-    WM --> WAM["世界动作模型 WAM"]
-    VLA --> WAM
-
-    ACT --> SUP["动作监督 / 示范数据"]
-    ACT --> RL["强化学习 RL"]
-    OBJ --> RL
-    RL --> MBRL["Model-based RL：模型辅助决策"]
-
-    SUP --> VLA
-    RL --> VLA
-    RL --> WAM
-    ROB --> VLA
-    ROB --> WM
-    ROB --> WAM
-    ROB --> RL
-```
 
 ### 核心对象
 
