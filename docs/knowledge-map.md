@@ -84,10 +84,10 @@ flowchart LR
 
 | 层                             | 主要问题                           | 典型张量/目标                                       | 不应直接推出的结论                                 |
 | ------------------------------ | ---------------------------------- | --------------------------------------------------- | -------------------------------------------------- |
-| Transformer backbone           | 如何融合 token、模态和历史？       | `$[B,L,D]$`、attention、causal/bidirectional mask | 使用 Transformer 不等于使用 next-token 或生成式 WM |
-| Next-token / action-token head | 如何把动作离散化并按序列预测？     | logits `$[B,L,V]$`、交叉熵                        | token 化不保证连续动作精度或低延迟                 |
-| Diffusion head                 | 如何从噪声逐步恢复动作/未来？      | `$[B,H,A]$`、epsilon/x0/v loss、scheduler         | 去噪 loss 不等于闭环控制成功率                     |
-| Flow-matching head             | 如何学习从源分布到数据分布的速度？ | `$v_\theta(x,t,C)$`、ODE integration              | flow 标签不说明 solver、步数或控制频率             |
+| Transformer backbone           | 如何融合 token、模态和历史？       | $[B,L,D]$、attention、causal/bidirectional mask | 使用 Transformer 不等于使用 next-token 或生成式 WM |
+| Next-token / action-token head | 如何把动作离散化并按序列预测？     | logits $[B,L,V]$、交叉熵                        | token 化不保证连续动作精度或低延迟                 |
+| Diffusion head                 | 如何从噪声逐步恢复动作/未来？      | $[B,H,A]$、epsilon/x0/v loss、scheduler         | 去噪 loss 不等于闭环控制成功率                     |
+| Flow-matching head             | 如何学习从源分布到数据分布的速度？ | $v_\theta(x,t,C)$、ODE integration              | flow 标签不说明 solver、步数或控制频率             |
 | JEPA/video/3D head             | 如何预测未来表征、视频或几何？     | latent/video/3D future objective                    | 需结合动作条件和决策证据                           |
 
 详细公式、训练/推理伪代码见[模型基础](model-basics.md)。判断一个模型是否属于 MBRL，仍要追问它是否把 dynamics/reward 用于 rollout、MPC、value 或 policy optimization。

@@ -25,10 +25,10 @@ VLA、World Model、MBRL、WAM 和 RL 最终都要落到一个具体机器人上
 
 用 $T^A_B\in SE(3)$ 表示“坐标系 B 在坐标系 A 中的位姿”：
 
-\[
+$$
 T^A_B = \begin{bmatrix}R^A_B & p^A_B\\0 & 1\end{bmatrix},\qquad
 T^A_C = T^A_B T^B_C.
-\]
+$$
 
 实践中必须明确：
 
@@ -43,15 +43,15 @@ T^A_C = T^A_B T^B_C.
 
 给定关节配置 $q$，正运动学得到末端位姿 $x=f(q)$。逆运动学寻找满足
 
-\[
+$$
 q^*=\arg\min_q\; d\big(f(q),x_{target}\big)
-\]
+$$
 
 且满足关节限位、碰撞约束和工作空间约束的解。对于速度命令，
 
-\[
+$$
 \dot x = J(q)\dot q.
-\]
+$$
 
 部署前至少检查：目标是否可达、IK 是否有连续解、动作 chunk 是否跨越奇异位形、夹爪开合是否与任务阶段同步。VLA 输出 task-space chunk 时，IK、插值和限位过滤应放在策略之外。
 
