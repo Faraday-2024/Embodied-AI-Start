@@ -82,7 +82,59 @@ ros2 run tf2_ros tf2_echo base_link tool0
 
 `view_frames` 生成的报告用于检查断链、重复发布者、更新频率和缓存延迟；`tf2_echo A B` 的方向是“查询 B 在 A 中的位姿”，不要只看数值而忘记确认查询方向。
 
-### 3.3 Python 查询示例
+### 3.3 RViz 2：把 ROS 2 状态画出来
+
+#### 它负责什么
+
+RViz 2 是 ROS 2 Humble 的三维可视化和交互工具。它订阅 ROS 2 topic，按照 TF 变换把机器人、坐标系、传感器和规划场景画在一起；它本身不负责物理仿真、运动规划或底层电机控制。规划仍由 MoveIt 2 完成，执行仍由 `ros2_control` 和机器人驱动完成。
+
+最重要的概念是 **Fixed Frame**：所有 Display 最终都要变换到这个参考帧。移动机器人通常选 `map` 或 `odom`，机械臂调试通常选 `base_link`；如果 Fixed Frame 不存在或 TF 不连通，画面会出现红色报错、机器人消失或数据停在旧位置。
+
+#### 启动与保存配置
+
+以下命令默认已执行 `source /opt/ros/humble/setup.bash`：
+
+~~~bash
+ros2 run rviz2 rviz2
+# 使用已有配置启动；路径替换为你的 .rviz 文件
+ros2 run rviz2 rviz2 -d ~/ros2_ws/src/my_robot_description/rviz/robot.rviz
+~~~
+
+启动后按这个顺序配置：
+
+1. 在左侧 **Global Options** 把 `Fixed Frame` 设置为实际存在的 `base_link`、`odom` 或 `map`。
+2. 点击 **Add** 添加需要的 Display；先添加 `TF` 和 `RobotModel`，确认坐标树与 URDF 都正常。
+3. 按消息类型添加 `Image`、`PointCloud2`、`LaserScan`、`Marker/MarkerArray` 等 Display，并在各自的 `Topic` 中选择正在发布的 topic。
+4. 调整队列长度、可靠性（QoS）和坐标轴显示；传感器 topic 的 QoS 不匹配时，Display 可能没有数据。
+5. 点击 **File -> Save Config As** 保存 `.rviz` 配置，之后用 `-d` 复用，不要每次手动重配。
+
+#### 与 TF、MoveIt 2 配合
+
+TF 调试时，先启动发布 TF 的驱动、`robot_state_publisher` 或静态变换节点，再打开 RViz 2：
+
+~~~bash
+ros2 run rviz2 rviz2
+~~~
+
+在 `TF` Display 中展开树，检查 `base_link -> camera_link -> camera_optical_frame` 和末端链是否连通；在 `RobotModel` Display 中确认模型方向、关节姿态和 Fixed Frame 一致。不要只看模型“出现了”，还要确认它是否位于正确的坐标位置。
+
+使用 MoveIt 2 的演示启动文件时，RViz 2 通常会随 launch 一起启动：
+
+~~~bash
+ros2 launch <your_moveit_config> demo.launch.py
+~~~
+
+在 RViz 的 **MotionPlanning** 面板中选择 Planning Group，拖动末端交互标记生成目标位姿，点击 **Plan** 检查轨迹，再按需要点击 **Execute**。执行前确认：Planning Frame、末端 link、当前关节状态、Planning Scene 障碍物和控制器状态都正确；只点击 **Plan** 不会驱动真实机器人，**Execute** 才会发送轨迹。
+
+#### 常见问题排查
+
+- **Fixed Frame does not exist**：运行 `ros2 run tf2_tools view_frames`，确认 Fixed Frame 的拼写和 TF 根节点。
+- **RobotModel 不显示**：检查 `robot_description` 参数、URDF 是否加载，以及 `robot_state_publisher` 是否运行。
+- **传感器画面为空**：用 `ros2 topic list` 和 `ros2 topic echo <topic> --once` 确认 topic 有数据，再检查 QoS 和消息的 `frame_id`。
+- **模型抖动或跳变**：检查重复 TF 发布者、时间戳和 `odom -> base_link` 的来源；不要让两个节点同时发布同一动态边。
+- **MotionPlanning 无法规划**：先分别确认 TF、关节状态、SRDF planning group、Planning Scene 和控制器，再调整规划器参数。
+
+### 3.4 Python 查询示例
 
 #### rclpy 是什么
 

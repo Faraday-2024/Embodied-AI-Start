@@ -80,6 +80,7 @@
 | Decimation | Action Decimation | 一个策略动作保持的物理步数，常写为 policy_dt / physics_dt。 |
 | TF / tf2 | Transform Library | ROS 2 Humble 中带时间戳的坐标变换树与查询库；用于在 frame 之间转换位姿、点和向量。 |
 | rclpy | ROS 2 Python Client Library | ROS 2 Humble 的 Python 客户端库；提供 `Node`、参数、定时器、通信接口和 executor 调度，常用于编写 TF/传感器/控制节点。 |
+| RViz 2 | ROS 2 Visualization Tool | ROS 2 Humble 的三维可视化与交互工具；订阅 topic 并通过 TF 显示机器人、传感器和 MoveIt 2 规划场景，本身不负责仿真或底层控制。 |
 | Planning Frame | Planning Frame | MoveIt 2 Humble 规划所使用的参考坐标系，目标位姿必须明确表达在哪个 frame 中。 |
 | Planning Scene | Planning Scene | MoveIt 2 Humble 保存机器人状态、障碍物、附着物体和碰撞规则的场景快照。 |
 | SRDF | Semantic Robot Description Format | 在 URDF 之上描述 MoveIt 2 Humble 语义信息的文件格式，例如 planning group、末端执行器和禁碰对。 |
