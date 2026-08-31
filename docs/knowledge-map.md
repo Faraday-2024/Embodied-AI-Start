@@ -47,6 +47,10 @@ flowchart TD
     SUP --> VLA
     RL --> VLA
     RL --> WAM
+    ROB --> WM
+    ROB --> VLA
+    ROB --> WAM
+    ROB --> RL
 ```
 
 ### 核心对象
