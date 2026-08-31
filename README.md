@@ -21,6 +21,20 @@
 | 制定学习计划                             | [章节式学习路线](docs/roadmap.md)    |
 | 查缩写和术语                             | [术语表](docs/glossary.md)           |
 
+## 从哪里开始
+
+不需要一次安装所有工具，先按目标选一条最短路径：
+
+| 你的目标 | 先读/先做 | 需要的环境 |
+| --- | --- | --- |
+| 只想建立整体概念 | [知识图谱](docs/knowledge-map.md) → [学习路线](docs/roadmap.md) | Markdown 阅读环境 |
+| 跑经典 RL | [强化学习基础](docs/reinforcement-learning.md) → [MuJoCo 教程](docs/mujoco-tutorial.md) | Python、Gymnasium、MuJoCo |
+| 调试机器人坐标和规划 | [机器人学基础](docs/robotics.md) | Ubuntu 22.04、ROS 2 Humble、RViz 2、MoveIt 2 |
+| 做 GPU 并行仿真或 RL | [Isaac Sim 教程](docs/isaac-sim-tutorial.md) | NVIDIA 驱动、匹配版本的 Isaac Sim/Isaac Lab |
+| 研究 VLA/WM/WAM | [模型基础](docs/model-basics.md) → [论文清单](docs/papers.md) | 先读理论，再按项目 README 配置环境 |
+
+建议顺序是：先固定 observation/action/时间步和成功判定，再安装单个工具；不同仿真器、ROS 2 和真机的结果不能只看分数直接横向比较。
+
 ## 一张图看懂主线
 
 ```mermaid

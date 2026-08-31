@@ -45,6 +45,9 @@ flowchart TD
 - [MuJoCo](https://github.com/google-deepmind/mujoco)：接触动力学仿真。
 - [MuJoCo 仿真教程](mujoco-tutorial.md)：从常见的 URDF 资产入口过渡到 MJCF，运行仿真循环并接入 Gymnasium。
 - [Isaac Sim 仿真教程](isaac-sim-tutorial.md)：导入 URDF 到 USD 场景，读取 Articulation/传感器并了解 Isaac Lab。
+- [ROS 2 Humble 文档](https://docs.ros.org/en/humble/)：节点、topic、TF/tf2 和工具链；本仓库机器人学章节统一以 Ubuntu 22.04 + ROS 2 Humble 为基线。
+- [MoveIt 2 Humble 文档](https://moveit.picknik.ai/humble/index.html)：URDF/SRDF、Planning Scene、规划与轨迹执行。
+- [机器人学基础](robotics.md)：将 TF、`rclpy`、RViz 2、MoveIt 2 和控制接口串成一个可排查的闭环。
 
 ## 第 2 章｜模型基础、动作策略与 benchmark
 
