@@ -16,10 +16,10 @@ VLA、World Model、MBRL、WAM 和 RL 最终都要落到一个具体机器人上
 
 推荐教材与工具：
 
+- 本章统一以 [Ubuntu 22.04](https://releases.ubuntu.com/22.04/) + [ROS 2 Humble](https://docs.ros.org/en/humble/) + [MoveIt 2 Humble](https://moveit.picknik.ai/humble/index.html) 为基线。其他 ROS 2 发行版的包名、参数和 API 可能不同，不能直接套用本章命令。
 - [Modern Robotics](https://modernrobotics.northwestern.edu/)：运动学、动力学、轨迹和控制的统一教材与视频。
 - [ModernRobotics 仓库](https://github.com/NxRLab/ModernRobotics)：教材配套的 Python/MATLAB 实现。
 - [Pinocchio](https://github.com/stack-of-tasks/pinocchio)：刚体运动学、动力学和解析/自动微分接口。
-- [ROS 2](https://docs.ros.org/en/rolling/) 与 [MoveIt 2](https://moveit.picknik.ai/main/index.html)：机器人状态、规划、控制器和真机系统集成。
 
 ## 2. 坐标系与 SE(3)
 
@@ -39,11 +39,11 @@ $$
 
 坐标系错误通常表现为“策略看起来有反应，但方向、旋转或抓取位置系统性错误”，不能只靠重新训练解决。
 
-## 3. TF/tf2：让坐标系随时间可查询
+## 3. TF/tf2（ROS 2 Humble）：让坐标系随时间可查询
 
 ### 3.1 理论
 
-ROS 2 中的 TF（Transform）不是一张静态图片，而是一棵带时间戳的坐标树。每个发布者提供父坐标系到子坐标系的变换，tf2 再沿树查询任意两帧之间的变换。常见链路是：
+ROS 2 Humble 中的 TF（Transform）不是一张静态图片，而是一棵带时间戳的坐标树。每个发布者提供父坐标系到子坐标系的变换，tf2 再沿树查询任意两帧之间的变换。常见链路是：
 
 ~~~text
 world/map -> odom -> base_link
@@ -70,17 +70,17 @@ tf2 查询的是**带时间的变换**。请求时刻 $t$ 的变换只能由缓�
 
 ### 3.2 命令行实践
 
-先确认 ROS 2 环境和节点：
+先确认 ROS 2 Humble 环境和节点（以下命令默认已执行 `source /opt/ros/humble/setup.bash`）：
 
 ~~~bash
-ros2 topic list | findstr tf
+ros2 topic list | grep tf
 ros2 topic echo /tf --once
 ros2 topic echo /tf_static --once
 ros2 run tf2_tools view_frames
 ros2 run tf2_ros tf2_echo base_link tool0
 ~~~
 
-Linux 使用 `grep` 替换 `findstr`。`view_frames` 生成的报告用于检查断链、重复发布者、更新频率和缓存延迟；`tf2_echo A B` 的方向是“查询 B 在 A 中的位姿”，不要只看数值而忘记确认查询方向。
+`view_frames` 生成的报告用于检查断链、重复发布者、更新频率和缓存延迟；`tf2_echo A B` 的方向是“查询 B 在 A 中的位姿”，不要只看数值而忘记确认查询方向。
 
 ### 3.3 Python 查询示例
 
@@ -117,11 +117,31 @@ rclpy.shutdown()
 
 实践排查顺序：先确认帧名拼写，再确认树是否连通，再确认时间戳是否落在 buffer 范围内，最后才检查外参数值。相机数据进入策略前，通常要把点或位姿从 `camera_optical_frame` 变换到 `base_link` 或 `world`，并记录使用的查询时刻。
 
-## 4. MoveIt 2：从目标位姿到可执行轨迹
+## 4. MoveIt 2（ROS 2 Humble）：从目标位姿到可执行轨迹
+
+### 4.0 Humble 环境准备
+
+在 Ubuntu 22.04 上安装 ROS 2 Humble 后，安装本章所需的 TF、RViz、MoveIt 2 和控制器工具：
+
+~~~bash
+source /opt/ros/humble/setup.bash
+sudo apt update
+sudo apt install ros-humble-tf2-tools ros-humble-rviz2 \
+  ros-humble-moveit ros-humble-ros2-control \
+  ros-humble-ros2-controllers
+ros2 run moveit_setup_assistant moveit_setup_assistant
+~~~
+
+工作空间构建后，还要在每个新终端重新加载 Humble 和工作空间：
+
+~~~bash
+source /opt/ros/humble/setup.bash
+source ~/ros2_ws/install/setup.bash
+~~~
 
 ### 4.1 理论结构
 
-MoveIt 2 不是单一 IK 函数，而是一条规划与执行管线：
+MoveIt 2 Humble 不是单一 IK 函数，而是一条规划与执行管线：
 
 ~~~text
 目标位姿/关节目标
@@ -155,28 +175,30 @@ URDF 描述机器人链接、关节、惯性、视觉和碰撞几何；SRDF 描�
 ros2 launch <your_moveit_config> demo.launch.py
 ros2 topic list
 ros2 control list_controllers
-ros2 action list | findstr trajectory
+ros2 action list | grep trajectory
 ~~~
 
 不同配置包的 launch 文件名可能是 `demo.launch.py`、`move_group.launch.py` 或自定义名称；以该包 README 为准。RViz 中应同时看到机器人当前状态、规划场景和目标位姿，否则先不要调规划器参数。
 
-### 4.3 Python 规划实践
+### 4.3 C++ 规划实践（Humble）
 
-MoveIt 2 的 Python 接口在不同发行版和封装包之间变化较大，下面给出调用逻辑而不是保证即拷即用的导入路径：
+MoveIt 2 Humble 的主流、文档齐全的接口是 C++ 的 `moveit::planning_interface::MoveGroupInterface`。下面是调用逻辑示例；实际节点还需创建 `rclcpp::Node`、执行器和参数配置：
 
-~~~python
-# 伪代码：使用你发行版对应的 MoveIt 2 Python API
-move_group = MoveGroupInterface("arm")
-move_group.set_pose_reference_frame("base_link")
-move_group.set_end_effector_link("tool0")
-move_group.set_pose_target(target_pose)
+~~~cpp
+// ROS 2 Humble / MoveIt 2 Humble 调用逻辑（省略节点与 executor 初始化）
+moveit::planning_interface::MoveGroupInterface move_group(node, "arm");
+move_group.setPoseReferenceFrame("base_link");
+move_group.setEndEffectorLink("tool0");
+move_group.setPoseTarget(target_pose);
 
-plan = move_group.plan()
-if not plan.success:
-    raise RuntimeError("planning failed")
+moveit::planning_interface::MoveGroupInterface::Plan plan;
+const auto result = move_group.plan(plan);
+if (result != moveit::core::MoveItErrorCode::SUCCESS) {
+  throw std::runtime_error("planning failed");
+}
 
-move_group.execute(plan.trajectory, wait=True)
-move_group.clear_pose_targets()
+move_group.execute(plan);
+move_group.clearPoseTargets();
 ~~~
 
 目标位姿必须明确参考坐标系、末端 link 和四元数是否归一化。工程中还要设置 planning time、规划尝试次数、速度/加速度缩放，并在执行前检查轨迹的关节限位和碰撞距离。对于视觉伺服或 VLA 的 delta pose，不要每一帧都无条件调用全局规划；通常先把目标变换到 planning frame，再用局部笛卡尔段、伺服控制或低层控制器执行。
