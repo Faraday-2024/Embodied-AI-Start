@@ -26,7 +26,7 @@ TRANS --> MBRL[MBRL：动力学 / 展望 / MPC]
 
 ```mermaid
 flowchart TD
-        ROOT["具身智能"] --> OBS["观测：图像 / 状态 / 触觉 / 语言"]
+    ROOT["具身智能"] --> OBS["观测：图像 / 状态 / 触觉 / 语言"]
     ROOT --> ROB["机器人学：坐标 / 运动学 / 动力学 / 控制 / 安全"]
     ROOT --> ACT["动作：关节 / 末端位姿 / 技能 / token"]
     ROOT --> OBJ["目标：任务指令 / 奖励 / 偏好"]
