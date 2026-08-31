@@ -1,35 +1,32 @@
 # Embodied AI Starter Map｜具身智能入门地图
 
-这是一个给具身智能初学者用的学习地图，内容覆盖 VLA、World Model（WM）、Model-based RL（MBRL）、World Action Model（WAM）和强化学习（RL）。每一章都尽量回答两件事：它解决什么问题，以及怎样跑起来或验证。
+这是一个给具身智能初学者用的学习地图，内容覆盖 VLA、World Model（WM）、Model-based RL（MBRL）、World Action Model（WAM）和强化学习（RL）。
 
 ## 快速入口
 
-| 方向                                     | 从这里开始                        |
-| ---------------------------------------- | --------------------------------- |
-| 先建立全局概念                           | [知识图谱](docs/knowledge-map.md)    |
-| 补齐机器人学基础                         | [机器人学知识](docs/robotics.md)     |
-| 学 MuJoCo 和 Isaac Sim 仿真             | [MuJoCo 仿真教程](docs/mujoco-tutorial.md) · [Isaac Sim 仿真教程](docs/isaac-sim-tutorial.md) |
-| 学 Transformer、Diffusion、Flow Matching | [模型基础](docs/model-basics.md)     |
-| 学 V、Q、A、经典 RL、GRPO 与 SAPO        | [强化学习基础](docs/reinforcement-learning.md) |
-| 按顺序读论文                             | [论文清单](docs/papers.md)           |
-| 找官方代码和基准                         | [代码仓与工具](docs/codebases.md)    |
-| 按任务选择 benchmark                     | [Benchmark 指南](docs/benchmarks.md) |
-| 制定学习计划                             | [章节式学习路线](docs/roadmap.md)    |
-| 查缩写和术语                             | [术语表](docs/glossary.md)           |
+| 方向                                     | 从这里开始                                                                               |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------- |
+| 先建立全局概念                           | [知识图谱](docs/knowledge-map.md)                                                           |
+| 补齐机器人学基础                         | [机器人学知识](docs/robotics.md)                                                            |
+| 学 MuJoCo 和 Isaac Sim 仿真              | [MuJoCo 仿真教程](docs/mujoco-tutorial.md) · [Isaac Sim 仿真教程](docs/isaac-sim-tutorial.md) |
+| 学 Transformer、Diffusion、Flow Matching | [模型基础](docs/model-basics.md)                                                            |
+| 学 V、Q、A、经典 RL、GRPO 与 SAPO        | [强化学习基础](docs/reinforcement-learning.md)                                              |
+| 按顺序读论文                             | [论文清单](docs/papers.md)                                                                  |
+| 找官方代码和基准                         | [代码仓与工具](docs/codebases.md)                                                           |
+| 按任务选择 benchmark                     | [Benchmark 指南](docs/benchmarks.md)                                                        |
+| 制定学习计划                             | [章节式学习路线](docs/roadmap.md)                                                           |
+| 查缩写和术语                             | [术语表](docs/glossary.md)                                                                  |
 
 ## 从哪里开始
 
-不用一上来把所有软件都装好。先看你想做什么，再走对应的路线：
+| 你的目标             | 先读/先做                                                                          | 需要的环境                                   |
+| -------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------- |
+| 只想先看懂全貌       | [知识图谱](docs/knowledge-map.md) → [学习路线](docs/roadmap.md)                         | 只需阅读文档                                 |
+| 跑经典 RL            | [强化学习基础](docs/reinforcement-learning.md) → [MuJoCo 教程](docs/mujoco-tutorial.md) | Python、Gymnasium、MuJoCo                    |
+| 调试机器人坐标和规划 | [机器人学基础](docs/robotics.md)                                                      | Ubuntu 22.04、ROS 2 Humble、RViz 2、MoveIt 2 |
+| 做 GPU 并行仿真或 RL | [Isaac Sim 教程](docs/isaac-sim-tutorial.md)                                          | NVIDIA 驱动、匹配版本的 Isaac Sim/Isaac Lab  |
+| 研究 VLA/WM/WAM      | [模型基础](docs/model-basics.md) → [论文清单](docs/papers.md)                           | 先读懂方法，再按项目 README 配环境           |
 
-| 你的目标 | 先读/先做 | 需要的环境 |
-| --- | --- | --- |
-| 只想先看懂全貌 | [知识图谱](docs/knowledge-map.md) → [学习路线](docs/roadmap.md) | 只需阅读文档 |
-| 跑经典 RL | [强化学习基础](docs/reinforcement-learning.md) → [MuJoCo 教程](docs/mujoco-tutorial.md) | Python、Gymnasium、MuJoCo |
-| 调试机器人坐标和规划 | [机器人学基础](docs/robotics.md) | Ubuntu 22.04、ROS 2 Humble、RViz 2、MoveIt 2 |
-| 做 GPU 并行仿真或 RL | [Isaac Sim 教程](docs/isaac-sim-tutorial.md) | NVIDIA 驱动、匹配版本的 Isaac Sim/Isaac Lab |
-| 研究 VLA/WM/WAM | [模型基础](docs/model-basics.md) → [论文清单](docs/papers.md) | 先读懂方法，再按项目 README 配环境 |
-
-开始实验前，先写清楚四件事：输入 observation、输出 action、时间步长、成功怎么判定。这样换仿真器或换机器人时，结果才有可比性。
 
 ## 一张图看懂主线
 
@@ -93,25 +90,27 @@ flowchart TD
 
 ### 论文主线
 
-| 方向                  | 先读                                                                                                                                                                         | 重点问题                                             |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| VLA                   | [OpenVLA](https://arxiv.org/abs/2406.09246)、[OpenVLA-OFT](https://arxiv.org/abs/2501.19645)、[π0.5](https://arxiv.org/abs/2504.16054)                                               | 动作接口、推理效率、跨任务/本体数据与开放世界泛化    |
-| WM：JEPA / video / 3D | [V-JEPA 2](https://arxiv.org/abs/2506.09985)、[Genie](https://arxiv.org/abs/2402.15391)、[VGGT](https://arxiv.org/abs/2503.11651)                                                     | 自监督未来表征、可交互视频和 3D 几何/场景建模        |
-| MBRL                  | [World Models](https://arxiv.org/abs/1803.10122)、[PlaNet](https://arxiv.org/abs/1811.04551)、[DreamerV3](https://arxiv.org/abs/2301.04104)、[TD-MPC2](https://arxiv.org/abs/2310.16828) | 学习动力学后做 imagined rollout、规划或价值/策略优化 |
-| WAM                   | [World Action Models survey](https://arxiv.org/abs/2605.12090)、[Fast-WAM](https://arxiv.org/abs/2603.16666)                                                                       | 未来世界与动作的耦合，以及测试时未来生成成本         |
-| RL                    | [PPO](https://arxiv.org/abs/1707.06347)、[SAC](https://arxiv.org/abs/1801.01290)、[CQL](https://arxiv.org/abs/2006.04779)、[IQL](https://arxiv.org/abs/2110.06169)、[GRPO](https://arxiv.org/abs/2402.03300)、[SAPO](https://arxiv.org/abs/2511.20347) | online/offline 边界、探索、保守价值与后训练          |
+下表是稳定主线；截至 2026-08-31 的近期预印本和它们各自解决的问题见[论文清单](docs/papers.md)的“近两年新增工作”部分。预印本的版本、代码和实验结果要以论文页面为准。
+
+| 方向                  | 先读                                                                                                                                                                                                                                 | 重点问题                                             |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| VLA                   | [OpenVLA](https://arxiv.org/abs/2406.09246)、[π0.5](https://arxiv.org/abs/2504.16054)、[GR00T N1](https://arxiv.org/abs/2503.14734)、[SmolVLA](https://arxiv.org/abs/2506.01844)                                                                                                       | 动作接口、推理效率、跨任务/本体数据与开放世界泛化    |
+| WM：JEPA / video / 3D | [V-JEPA 2](https://arxiv.org/abs/2506.09985)、[Genie](https://arxiv.org/abs/2402.15391)、[VGGT](https://arxiv.org/abs/2503.11651)                                                                                                             | 自监督未来表征、可交互视频和 3D 几何/场景建模        |
+| MBRL                  | [World Models](https://arxiv.org/abs/1803.10122)、[PlaNet](https://arxiv.org/abs/1811.04551)、[DreamerV3](https://arxiv.org/abs/2301.04104)、[TD-MPC2](https://arxiv.org/abs/2310.16828)                                                         | 学习动力学后做 imagined rollout、规划或价值/策略优化 |
+| WAM                   | [World Action Models survey](https://arxiv.org/abs/2605.12090)、[Fast-WAM](https://arxiv.org/abs/2603.16666)、[Zero-WAM](https://arxiv.org/abs/2608.26103)、[GlanceWAM](https://arxiv.org/abs/2608.23927)                                                                                                                               | 未来世界与动作的耦合，以及测试时未来生成成本         |
+| RL                    | [PPO](https://arxiv.org/abs/1707.06347)、[SAC](https://arxiv.org/abs/1801.01290)、[IQL](https://arxiv.org/abs/2110.06169)、[GRPO](https://arxiv.org/abs/2402.03300)、[SAPO](https://arxiv.org/abs/2511.20347)、[GRAFT](https://arxiv.org/abs/2608.27079) | online/offline 边界、探索、保守价值与后训练          |
 
 ### 代码主线
 
 | 方向                  | 推荐仓库                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 用途                                                                     |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| VLA                   | [OpenVLA](https://github.com/openvla/openvla)、[OpenVLA-OFT](https://github.com/moojink/openvla-oft)、[OpenPI](https://github.com/Physical-Intelligence/openpi)、[StarVLA](https://github.com/starVLA/starVLA)                                                                                                                                                                                                                                                                                             | 开源 VLA 推理、效率优化、适配与模块拆解                                  |
+| VLA                   | [OpenVLA](https://github.com/openvla/openvla)、[OpenVLA-OFT](https://github.com/moojink/openvla-oft)、[OpenPI](https://github.com/Physical-Intelligence/openpi)、[StarVLA](https://github.com/starVLA/starVLA)、[LeRobot](https://github.com/huggingface/lerobot)                                                                                                                                                                                                                                                                                             | 开源 VLA 推理、效率优化、适配与模块拆解                                  |
 | 动作策略              | [Diffusion Policy](https://github.com/real-stanford/diffusion_policy)、[ACT](https://github.com/tonyzhaozh/act)                                                                                                                                                                                                                                                                                                                                                                                      | diffusion / action chunking 的可读实现                                   |
 | WM：JEPA / video / 3D | [V-JEPA 2](https://github.com/facebookresearch/vjepa2)、[Cosmos Predict2](https://github.com/nvidia-cosmos/cosmos-predict2)、[VGGT](https://github.com/facebookresearch/vggt)、[3D Gaussian Splatting](https://github.com/graphdeco-inria/gaussian-splatting)                                                                                                                                                                                                                                              | 自监督潜在预测、视频世界建模与 3D 场景表示；是否能用于动作闭环需单独验证 |
 | MBRL                  | [TD-MPC2](https://github.com/nicklashansen/tdmpc2)、[DreamerV3](https://github.com/danijar/dreamerv3)                                                                                                                                                                                                                                                                                                                                                                                                | 潜空间动力学、imagined rollout、MPC 与策略优化                           |
 | WAM                   | [FastWAM](https://github.com/yuantianyuan01/FastWAM)                                                                                                                                                                                                                                                                                                                                                                                                                                              | 视频/世界表征与动作生成的耦合推理                                        |
 | RL / MBRL             | [Gymnasium](https://github.com/Farama-Foundation/Gymnasium)、[Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3)、[CleanRL](https://github.com/vwxyzjn/cleanrl)、[DQN Zoo](https://github.com/google-deepmind/dqn_zoo)、[d3rlpy](https://github.com/takuseno/d3rlpy)、[Implicit Q-Learning](https://github.com/ikostrikov/implicit_q_learning)、[Minari](https://github.com/Farama-Foundation/Minari)、[TD-MPC2](https://github.com/nicklashansen/tdmpc2)、[DreamerV3](https://github.com/danijar/dreamerv3) | PPO、SAC、DQN、IQL 与 MBRL 项目入口                                      |
-| RL 后训练             | [RLinf](https://github.com/RLinf/RLinf)、[AReaL](https://github.com/areal-project/AReaL)                                                                                                                                                                                                                                                                                                                                                                                                            | VLA/基础模型后训练，以及 GRPO/SAPO 实现                                 |
+| RL 后训练             | [RLinf](https://github.com/RLinf/RLinf)、[AReaL](https://github.com/areal-project/AReaL)                                                                                                                                                                                                                                                                                                                                                                                                             | VLA/基础模型后训练，以及 GRPO/SAPO 实现                                  |
 
 完整论文与仓库索引见 [论文清单](docs/papers.md) 和 [代码仓与工具](docs/codebases.md)。
 

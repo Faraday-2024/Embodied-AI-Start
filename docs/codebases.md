@@ -36,8 +36,10 @@ StarVLA 与 RLinf 的直接组合示例：
 | OpenVLA-OFT      | OpenVLA 的效率优化微调与推理           | [GitHub](https://github.com/moojink/openvla-oft)                                                                         |
 | OpenPI           | π0 / π0.5 的开源实现、配置与推理接口  | [GitHub](https://github.com/Physical-Intelligence/openpi) · [Docs](https://github.com/Physical-Intelligence/openpi#readme) |
 | Octo             | 通用机器人策略与多数据集预训练/微调     | [GitHub](https://github.com/octo-models/octo)                                                                            |
+| Isaac GR00T      | NVIDIA 的人形机器人基础模型、数据管线与训练入口 | [GitHub](https://github.com/NVIDIA/Isaac-GR00T) · [项目页](https://developer.nvidia.com/isaac/gr00t) |
 | Diffusion Policy | diffusion 动作策略的官方实现            | [GitHub](https://github.com/real-stanford/diffusion_policy)                                                              |
 | ACT              | 低成本双臂操作与 action chunking        | [GitHub](https://github.com/tonyzhaozh/act)                                                                              |
+| LeRobot           | Hugging Face 的低成本机器人学习工具链，包含 SmolVLA、数据采集和策略训练入口 | [GitHub](https://github.com/huggingface/lerobot) · [Docs](https://huggingface.co/docs/lerobot/) |
 
 ## 4. RL 与 MBRL
 
@@ -53,6 +55,13 @@ StarVLA 与 RLinf 的直接组合示例：
 | TD-MPC2           | 潜空间动力学 + MPC 的 MBRL 基线                                    | [GitHub](https://github.com/nicklashansen/tdmpc2) · [Project](https://www.tdmpc2.com/)                    |
 | DreamerV3         | 用 latent dynamics 做 imagined rollout 和 actor-critic 更新的 MBRL | [GitHub](https://github.com/danijar/dreamerv3)                                                          |
 | Minari            | Offline RL 数据集 API 与数据目录                                   | [GitHub](https://github.com/Farama-Foundation/Minari) · [Docs](https://minari.farama.org/)                |
+
+WAM 相关的代码和索引入口：
+
+- [FastWAM](https://github.com/yuantianyuan01/FastWAM)：测试时未来想象成本与动作生成的基线。
+- [Awesome-WAM](https://github.com/OpenMOSS/Awesome-WAM)：WAM 论文和项目索引。
+
+近期论文中的新方法不一定已经有公开代码。要复现时，先从[论文清单](papers.md)的 arXiv 页面进入，再确认作者仓库、checkpoint、数据和评测脚本是否真的公开。
 
 ## 5. World Model：JEPA、视频与 3D
 

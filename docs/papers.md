@@ -1,5 +1,7 @@
 # 论文清单：VLA、WM、MBRL 与 WAM
 
+本页的“近两年新增工作”按 2026-08-31 的公开 arXiv 和项目页面整理。预印本会继续变更，引用或复现前请打开原页面确认版本、作者、代码和实验协议。
+
 ## 阅读标记
 
 - **S0｜必读**：建立共同语言，建议精读摘要、方法图、损失函数和实验结论。
@@ -46,6 +48,20 @@
 | Diffusion Policy | 以条件去噪建模多峰连续动作分布 | [arXiv](https://arxiv.org/abs/2303.04137) · [Code](https://github.com/real-stanford/diffusion_policy) |
 | A Survey on Vision-Language-Action Models for Embodied AI | 从组件、训练目标、任务和架构补齐全景 | [arXiv](https://arxiv.org/abs/2405.14093) |
 
+### 近两年新增工作
+
+下面这些工作更接近当前工程问题：模型太大、推理太慢、历史信息没用好，或者还不会提前考虑接触和后续动作。2026 年条目目前主要是 arXiv 预印本，阅读时要自行核对版本、代码和实验协议。
+
+| 论文 | 它在解决什么问题 | 入口 |
+| --- | --- | --- |
+| GR00T N1: An Open Foundation Model for Generalist Humanoid Robots（2025） | 用视觉语言模块理解任务，再用 diffusion transformer 生成连续动作；同时混合真实轨迹、人类视频和合成数据 | [arXiv](https://arxiv.org/abs/2503.14734) · [NVIDIA 项目页](https://developer.nvidia.com/isaac/gr00t) |
+| Gemini Robotics: Bringing AI into the Physical World（2025） | 将通用多模态模型扩展为直接控制机器人的 VLA，并讨论跨本体适配和具身推理 | [arXiv](https://arxiv.org/abs/2503.20020) |
+| SmolVLA: A Vision-Language-Action Model for Affordable and Efficient Robotics（2025） | 用更小的模型和异步推理降低训练、显存和部署成本，适合先在普通 GPU 上跑通 | [arXiv](https://arxiv.org/abs/2506.01844) · [LeRobot](https://github.com/huggingface/lerobot) |
+| MolmoAct: Action Reasoning Models that can Reason in Space（2025） | 在低层动作前加入可编辑的空间轨迹/中层计划，让策略更容易解释和调整 | [arXiv](https://arxiv.org/abs/2508.07917) |
+| TemporalFlow-VLA: Learning Physically Grounded Execution History for Long-Horizon Robot Manipulation（2026，预印本） | 不只堆历史图像，而是用机器人状态和几何信息训练“执行历史”表征，再服务长时程动作预测 | [arXiv](https://arxiv.org/abs/2608.26821) |
+| FlashVLA: Streaming Action Decoding for Fast and Asynchronous VLA Inference（2026，预印本） | 把不同噪声阶段的动作 chunk 放进流式缓冲区，边执行边解码，目标是降低 flow-matching VLA 的等待时间 | [arXiv](https://arxiv.org/abs/2608.27384) |
+| PHR-VLA: Planning Horizon Reasoning for Vision-Language-Action Models（2026，预印本） | 训练时用未来局部动力学表征监督 VLA，让模型在接触和细粒度操作前多看一步 | [arXiv](https://arxiv.org/abs/2608.27609) |
+
 ## S1｜World Model：JEPA、视频与 3D
 
 | 论文 | 抓住一个关键点 | 入口 |
@@ -56,6 +72,18 @@
 | A Comprehensive Survey on World Models for Embodied AI | 从表征、时间建模、空间建模和决策用途区分 WM 路线 | [arXiv](https://arxiv.org/abs/2510.16732) |
 
 这里的 WM 是广义环境表征/预测/生成范式；JEPA、视频和 3D/4D 路线不要求自带 planner 或 actor-critic。只有加入动作条件与决策收益证据，才应进一步主张其控制价值。
+
+## S1｜WAM：世界与动作联合建模
+
+WAM 关注的是“未来世界表征”和“机器人动作”是否在同一个闭环里。下面的工作分别代表三种近期路线：用人类视频做任务条件、异步地想象未来、或者直接把世界演化和动作写进一个因果模型。
+
+| 论文 | 抓住一个关键点 | 入口 |
+| --- | --- | --- |
+| Zero-WAM: In-Context World-Action Modeling from Human Videos for Open-Ended Task Generalization（2026，预印本） | 把人类视频当成新任务的上下文提示，不更新参数也能尝试未见任务 | [arXiv](https://arxiv.org/abs/2608.26103) |
+| WAM-TTT: Steering World-Action Models by Watching Human Play at Test Time（2026，预印本） | 冻结 WAM，只用无标注的人类视频更新轻量记忆，在测试时改变任务偏好 | [arXiv](https://arxiv.org/abs/2607.06988) |
+| GlanceWAM: Sparse Test-Time Imagination for World-Action Models（2026，预印本） | 把未来想象放到控制关键路径之外，后台生成少量前瞻表征，避免同步视频生成拖慢动作 | [arXiv](https://arxiv.org/abs/2608.23927) |
+| Riemann-1.0: An Embodied World Action Model for Physical AI（2026，预印本） | 用统一的因果序列同时建模多视角视觉、机器人状态和动作，把策略与可交互世界模拟放进一个模型 | [arXiv](https://arxiv.org/abs/2608.27033) |
+| Making Latent Evolution Explicit: Operator-Structured Transitions for World Action Models（2026，预印本） | 用结构化算子描述 latent 的演化，试图让 WAM 的状态转移更容易分析和控制 | [arXiv](https://arxiv.org/abs/2608.27259) |
 
 ## S1｜Model-based RL
 
@@ -83,6 +111,17 @@
 | Offline, sequence | Decision Transformer | 把控制重写为回报条件序列建模 | [arXiv](https://arxiv.org/abs/2106.01345) · [Code](https://github.com/kzl/decision-transformer) |
 | Offline, model-based | MOPO | 用不确定性惩罚模型 rollout 的分布外区域 | [arXiv](https://arxiv.org/abs/2005.13239) |
 | Offline, model-based | COMBO | 保守价值学习与模型生成数据结合 | [arXiv](https://arxiv.org/abs/2102.08363) |
+
+### 机器人策略后训练的新方向
+
+这些工作不是新的通用 RL 教科书算法，而是把 RL 接到已经训练好的机器人策略上。重点看它们如何处理失败数据、动作 chunk 和大模型推理延迟。
+
+| 论文 | 抓住一个关键点 | 入口 |
+| --- | --- | --- |
+| Beyond Imitation: Self-Improving Robot Policies via Off-Policy Q-Planning（2026，预印本） | 冻结行为克隆策略，只训练一个小的 off-policy Q 函数，用成功和失败 rollout 做 Q 引导与自我改进 | [arXiv](https://arxiv.org/abs/2608.21204) |
+| Learning to Act While Waiting: RL Finetuning of Generalist Robot Policies Under Inference Latency（2026，预印本） | 用已提交动作和推理中的中间观测补回近似 Markov 状态，让 RL 能在 VLA 推理等待时继续学习 | [arXiv](https://arxiv.org/abs/2608.23831) |
+| PAC-ACT: Post-training Actor-Critic for Action Chunking Transformers（2026，预印本） | 在 action chunk 层面做 actor-critic，并保留行为先验，减少接触任务在线探索时的动作漂移 | [arXiv](https://arxiv.org/abs/2607.09590) |
+| GRAFT: Grounded and Efficient Online Reinforcement Adaptation for Fine-Grained Robot Manipulation（2026，预印本） | 用任务相关的局部视觉 grounding 和缓存的视觉语言前缀，降低真实机器人在线适配成本 | [arXiv](https://arxiv.org/abs/2608.27079) |
 
 ## S2｜数据、基准与评测
 

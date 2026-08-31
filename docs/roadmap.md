@@ -60,6 +60,7 @@ flowchart TD
 - [DiT](https://github.com/facebookresearch/DiT)：Transformer diffusion backbone。
 - [Diffusion Policy](https://github.com/real-stanford/diffusion_policy)：连续动作 chunk 策略。
 - [OpenPI](https://github.com/Physical-Intelligence/openpi)：π0/π0.5 开源实现。
+- [GR00T N1](https://arxiv.org/abs/2503.14734)、[SmolVLA](https://arxiv.org/abs/2506.01844)、[MolmoAct](https://arxiv.org/abs/2508.07917)：分别看人形基础模型、小模型低延迟部署和空间动作推理。
 
 ## 第 3 章｜Model-free RL：Online 与 Offline
 
@@ -116,6 +117,7 @@ flowchart TD
 - [Awesome-WAM](https://github.com/OpenMOSS/Awesome-WAM)：WAM 论文和项目索引。
 - [V-JEPA 2](https://github.com/facebookresearch/vjepa2)：未来表征参考实现。
 - [Cosmos Predict2](https://github.com/nvidia-cosmos/cosmos-predict2)：视频未来生成参考实现。
+- 近期继续看 [Zero-WAM](https://arxiv.org/abs/2608.26103)、[WAM-TTT](https://arxiv.org/abs/2607.06988) 和 [GlanceWAM](https://arxiv.org/abs/2608.23927)：它们分别对应人类视频上下文、测试时记忆适配和异步未来想象。
 
 ## 第 8 章｜RL 后训练与综合项目
 
@@ -129,3 +131,4 @@ flowchart TD
 - [StarVLA](https://github.com/starVLA/starVLA)：模块化 VLA 基座。
 - [LIBERO](https://github.com/Lifelong-Robot-Learning/LIBERO)、[ManiSkill](https://github.com/haosulab/ManiSkill)、[RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin)：操作评测环境。
 - [bimanual-vla](https://github.com/SUNNYsyy2005/bimanual-vla)：双臂真机部署入口。
+- 近期机器人策略后训练可对照 [Q-Planning](https://arxiv.org/abs/2608.21204)、[ARLI](https://arxiv.org/abs/2608.23831)、[PAC-ACT](https://arxiv.org/abs/2607.09590) 和 [GRAFT](https://arxiv.org/abs/2608.27079)，重点看失败数据、action chunk 和推理延迟怎么进入 RL。
