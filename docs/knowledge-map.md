@@ -14,8 +14,8 @@
 flowchart LR
     MUJOCO[MuJoCo\n轻量动力学 / 控制原型] --> TRANS[transition\n观测、动作、奖励、终止]
     ISAAC[Isaac Sim\nUSD / PhysX / 传感器 / GPU] --> TRANS
-    TRANS --> RL[RL：PPO / SAC / DQN]
-    TRANS --> MBRL[MBRL：dynamics / rollout / MPC]
+TRANS --> RL[强化学习：PPO / SAC / DQN]
+TRANS --> MBRL[MBRL：动力学 / 展望 / MPC]
     ISAAC --> LAB[Isaac Lab\n并行环境与机器人学习层]
     LAB --> RL
 ~~~
@@ -26,7 +26,7 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    ROOT["具身智能"] --> OBS["观测：图像 / 状态 / 触觉 / 语言"]
+        ROOT["具身智能"] --> OBS["观测：图像 / 状态 / 触觉 / 语言"]
     ROOT --> ROB["机器人学：坐标 / 运动学 / 动力学 / 控制 / 安全"]
     ROOT --> ACT["动作：关节 / 末端位姿 / 技能 / token"]
     ROOT --> OBJ["目标：任务指令 / 奖励 / 偏好"]
@@ -39,16 +39,16 @@ flowchart TD
     WM --> WAM["世界动作模型 WAM"]
     VLA --> WAM
 
-    ACT --> SUP["动作监督 / 示范数据"]
     ACT --> RL["强化学习 RL"]
+    ACT --> SUP["动作监督 / 示范数据"]
     OBJ --> RL
     RL --> MBRL["Model-based RL：模型辅助决策"]
 
     SUP --> VLA
     RL --> VLA
     RL --> WAM
-    ROB --> VLA
     ROB --> WM
+    ROB --> VLA
     ROB --> WAM
     ROB --> RL
 ```
